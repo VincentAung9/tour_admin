@@ -1,0 +1,17 @@
+{
+  "resourceName": "tourtestimagevideo01",
+  "policyUUID": "36d840ac",
+  "bucketName": "tourtestimagevideo01",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "groupAccess": {}
+}

@@ -1,0 +1,267 @@
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELED
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+type User
+  @model
+  @auth(
+    rules: [
+      { allow: public, provider: identityPool, operations: [read] }
+      {
+        allow: private
+        provider: userPools
+        operations: [read, create, update, delete]
+      }
+    ]
+  ) {
+  id: ID!
+  name: String!
+  email: String!
+  phone: String!
+  nickname: String!
+  profile: String!
+  bookings: [Booking] @hasMany(indexName: "byUser", fields: ["id"])
+  role: UserRole!
+}
+
+type Tour
+  @model
+  @auth(
+    rules: [
+      { allow: public, provider: identityPool, operations: [read] }
+      {
+        allow: private
+        provider: userPools
+        operations: [read, create, update, delete]
+      }
+    ]
+  ) {
+  id: ID!
+  title: String!
+  location: String!
+  description: String!
+  imageUrl: String!
+  galleryImages: [String!]
+  passengers: String!
+  season: String!
+  rating: Float!
+  category: String!
+  tags: [String!]!
+  plans: [Plan!]!
+  days: [Day!]!
+  additionalInfo: [Info!]
+  guide: TourGuide
+  schedules: [Schedule] @hasMany(indexName: "byTour", fields: ["id"])
+  reviews: [Review] @hasMany(indexName: "byTour", fields: ["id"])
+  createdBy: String!
+  createdAt: AWSDateTime!
+  badge: String!
+  meetingPoint: MeetingPoint
+}
+
+type Booking
+  @model
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: userPools
+        operations: [read, create, update, delete]
+      }
+    ]
+  ) {
+  id: ID!
+  userId: ID! @index(name: "byUser", queryField: "bookingsByUser")
+  userEmail: String!
+    @index(name: "byUserEmail", queryField: "bookingsByUserEmail")
+  userName: String!
+  email: String!
+  phoneNumber: String!
+  tourId: ID! @index(name: "byTour", queryField: "bookingsByTour")
+  tourTitle: String!
+  tourLocation: String!
+  tourImageUrl: String!
+  planName: String!
+  planPrice: String!
+  subtotal: Float!
+  discount: Float!
+  serviceFee: Float!
+  totalAmount: Float!
+  paymentMethod: String!
+  paymentIntentId: String
+  paymentStatus: String!
+  invoiceUrl: String
+  status: BookingStatus!
+  bookingDate: AWSDateTime!
+  chats: [ChatMessage] @hasMany(indexName: "byBooking", fields: ["id"])
+}
+
+type PromoCode
+  @model
+  @auth(
+    rules: [
+      { allow: public, provider: identityPool, operations: [read] }
+      {
+        allow: private
+        provider: userPools
+        operations: [read, create, update, delete]
+      }
+    ]
+  ) {
+  id: ID!
+  code: String!
+  discountType: String!
+  discountValue: Int!
+  isActive: Boolean!
+  createdAt: AWSDateTime!
+  expiresAt: AWSDateTime!
+  maxUsagePerUser: Int
+  maxGlobalUsage: Int
+  usageCount: Int
+  usedBy: [String]
+}
+
+type Review
+  @model
+  @auth(
+    rules: [
+      { allow: public, provider: identityPool, operations: [read] }
+      {
+        allow: private
+        provider: userPools
+        operations: [read, create, update, delete]
+      }
+    ]
+  ) {
+  id: ID!
+  userEmail: String!
+    @index(name: "byUserEmail", queryField: "reviewsByUserEmail")
+  userName: String!
+  tourId: ID! @index(name: "byTour", queryField: "reviewsByTour")
+  rating: Float!
+  comment: String
+  createdAt: AWSDateTime!
+}
+
+type Schedule
+  @model
+  @auth(
+    rules: [
+      { allow: public, provider: identityPool, operations: [read] }
+      {
+        allow: private
+        provider: userPools
+        operations: [read, create, update, delete]
+      }
+    ]
+  ) {
+  id: ID!
+  tourId: ID! @index(name: "byTour", queryField: "schedulesByTour")
+  startDate: AWSDateTime!
+  endDate: AWSDateTime!
+  maxPassengers: Int!
+  availableSlots: Int!
+}
+
+type Notification
+  @model
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: userPools
+        operations: [read, create, update, delete]
+      }
+    ]
+  ) {
+  id: ID!
+  userEmail: String!
+    @index(name: "byUserEmail", queryField: "notificationsByUserEmail")
+  message: String!
+  type: String
+  read: Boolean!
+  createdAt: AWSDateTime!
+}
+
+type ChatMessage
+  @model
+  @auth(
+    rules: [
+      {
+        allow: private
+        provider: userPools
+        operations: [read, create, update, delete]
+      }
+    ]
+  ) {
+  id: ID!
+  senderEmail: String!
+    @index(name: "bySenderEmail", queryField: "messagesBySenderEmail")
+  senderName: String
+  receiverEmail: String!
+    @index(name: "byReceiverEmail", queryField: "messagesByReceiverEmail")
+  message: String!
+  isFromUser: Boolean!
+  createdAt: AWSDateTime!
+  bookingId: ID @index(name: "byBooking", queryField: "messagesByBooking")
+}
+
+type UserVideo
+  @model
+  @auth(
+    rules: [
+      { allow: public, provider: identityPool, operations: [read] }
+      {
+        allow: private
+        provider: userPools
+        operations: [read, create, update, delete]
+      }
+    ]
+  ) {
+  id: ID!
+  userEmail: String!
+    @index(name: "byUserEmail", queryField: "videosByUserEmail")
+  videoUrl: String!
+  caption: String
+  createdAt: AWSDateTime!
+}
+
+type Plan {
+  name: String!
+  price: String!
+}
+
+type Day {
+  title: String!
+  subtitle: String!
+  imageUrl: String!
+}
+
+type Info {
+  title: String!
+  subtitle: String!
+}
+
+type TourGuide {
+  name: String!
+  phone: String
+  email: String
+  imageUrl: String
+  language: [String]
+  bio: String
+}
+
+type MeetingPoint {
+  address: String!
+  latitude: Float
+  longitude: Float
+  instructions: String
+}

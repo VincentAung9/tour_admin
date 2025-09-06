@@ -1,0 +1,17 @@
+{
+  "bucketName": "tourtestimagevideo01",
+  "authPolicy": "auth",
+  "unauthPolicy": "public",
+  "selectedGuestPermissions": ["s3:GetObject"],
+  "selectedAuthenticatedPermissions": ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"],
+  "resourceName": "tourtestimagevideo01",
+  "storageAccess": [
+    {
+      "bucketPolicy": "public",
+      "groupPolicy": "private",
+      "path": "public/profile_images/",
+      "permissions": ["read", "write", "delete"]
+    }
+  ]
+}
+

@@ -1,0 +1,43 @@
+name: tour_agent_aws
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+environment:
+  sdk: '>=3.0.0 <4.0.0' # Keep this as your Flutter SDK allows
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  # Keeping these on the latest stable 2.x.x versions
+  amplify_flutter: ^2.6.3
+  amplify_auth_cognito: ^2.6.3
+  amplify_datastore: ^2.6.3
+  amplify_api: ^2.6.3 # Ensure you have a version for amplify_api
+  cached_network_image: ^3.3.1
+  amplify_storage_s3: ^2.6.3 # IMPORTANT: Reverted to amplify_storage_s3 (not _dart)
+  amplify_auth_cognito_dart: ^0.11.11 # This can usually be removed if amplify_auth_cognito is present.
+  flutter_animate: ^4.5.2
+  file_picker: ^10.2.0
+  google_fonts: ^6.2.1
+  flutter_stripe: ^11.5.0
+  http: ^1.4.0
+  flutter_date_pickers: ^0.4.3
+  fluttertoast: ^8.2.12
+  image_picker: ^1.1.2
+  amplify_core: ^2.6.3
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0 # Updated for compatibility
+
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+  fonts:
+    - family: Arial
+      fonts:
+        - asset: assets/arial.ttf

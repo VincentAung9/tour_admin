@@ -1,0 +1,26 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-touragent-dev-99c87-authRole",
+      "UnauthRoleArn": "arn:aws:iam::756393303462:role/amplify-touragent-dev-99c87-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::756393303462:role/amplify-touragent-dev-99c87-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-touragent-dev-99c87-deployment",
+      "UnauthRoleName": "amplify-touragent-dev-99c87-unauthRole",
+      "StackName": "amplify-touragent-dev-99c87",
+      "StackId": "arn:aws:cloudformation:us-east-1:756393303462:stack/amplify-touragent-dev-99c87/4fea0e00-4daf-11f0-9d3b-0affeef06bdf",
+      "AmplifyAppId": "d3tztmz3427z7g"
+    },
+    "categories": {
+      "api": {
+        "touragent": {}
+      },
+      "auth": {
+        "touragent126db6dc": {}
+      },
+      "storage": {
+        "tourtestimagevideo01": {}
+      }
+    }
+  }
+}
