@@ -6,7 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
-import 'package:intl/intl.dart'; // Import for date formatting
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart'; // Import Lottie package
 
 import '../My_Booking.dart';
 import 'ProfileSetting.dart';
@@ -23,7 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Map<String, dynamic>? _userProfile;
   bool _isLoading = true;
   File? _selectedImageFile;
-  String _memberSince = 'N/A'; // New variable to store formatted date
+  String _memberSince = 'N/A';
 
   @override
   void initState() {
@@ -60,7 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
             phone
             nickname
             profile
-            createdAt # <<< ADDED createdAt TO THE QUERY
+            createdAt
           }
         }
       ''',
@@ -71,7 +72,6 @@ class _ProfilePageState extends State<ProfilePage> {
       final rawData = response.data;
 
       if (rawData == null || jsonDecode(rawData)['getUser'] == null) {
-        // If user record doesn't exist, navigate to SignIn
         if (mounted) {
           Navigator.pushReplacement(
             context,
@@ -83,7 +83,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
       final user = jsonDecode(rawData)['getUser'];
       String? profileKey = user['profile'];
-      String? createdAtString = user['createdAt']; // <<< GET createdAt STRING
+      String? createdAtString = user['createdAt'];
 
       if (profileKey != null &&
           profileKey.isNotEmpty &&
@@ -92,12 +92,11 @@ class _ProfilePageState extends State<ProfilePage> {
         user['profile'] = signedUrl;
       }
 
-      // Format createdAt string if available
       String formattedDate = 'N/A';
       if (createdAtString != null && createdAtString.isNotEmpty) {
         try {
           final dateTime = DateTime.parse(createdAtString);
-          formattedDate = DateFormat('MMMM yyyy').format(dateTime); // e.g., "July 2025"
+          formattedDate = DateFormat('MMMM yyyy').format(dateTime);
         } catch (e) {
           safePrint('Error parsing createdAt date: $e');
         }
@@ -106,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (mounted) {
         setState(() {
           _userProfile = user;
-          _memberSince = formattedDate; // <<< STORE FORMATTED DATE
+          _memberSince = formattedDate;
           _isLoading = false;
         });
       }
@@ -214,7 +213,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       body: _isLoading
-          ? const Center(child: CupertinoActivityIndicator())
+          ? Center(
+        child: Lottie.asset(
+          'assets/loading.json', // Path to your Lottie animation
+          width: 400, // Adjust size as needed
+          height: 400,
+          fit: BoxFit.contain,
+        ),
+      )
           : _userProfile == null
           ? const Center(child: Text('User profile not found'))
           : SingleChildScrollView(
@@ -239,7 +245,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Profile Picture Section
                     Stack(
                       children: [
                         CircleAvatar(
@@ -271,8 +276,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                             placeholder: (context, url) =>
-                            const CupertinoActivityIndicator(),
-                            errorWidget:
+                                Lottie.asset(
+                                  'assets/loading.json', // Path to your Lottie animation
+                                  width: 400, // Adjust size as needed
+                                  height: 400,
+                                  fit: BoxFit.contain,
+                                ),
+                              errorWidget:
                                 (context, url, error) =>
                                 Text(
                                   _userProfile?['name']?[0] ??
@@ -295,8 +305,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                     const SizedBox(height: 24),
-
-                    // User Info Section
                     Text(
                       _userProfile?['name'] ?? 'No Name Set',
                       style: const TextStyle(
@@ -317,10 +325,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-
                     const SizedBox(height: 24),
-
-                    // Statistics Section (Mock data for now)
                     Row(
                       mainAxisAlignment:
                       MainAxisAlignment.spaceEvenly,
@@ -331,14 +336,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                     const SizedBox(height: 24),
-
-                    // Member Since & Email
                     Divider(color: Colors.grey.shade300),
                     const SizedBox(height: 16),
                     _buildInfoRow(
                       Icons.calendar_today,
                       "Member Since",
-                      _memberSince, // <<< USE THE FORMATTED DATE
+                      _memberSince,
                     ),
                     const SizedBox(height: 12),
                     _buildInfoRow(
@@ -353,8 +356,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       _userProfile?['phone'] ?? 'No Phone Set',
                     ),
                     const SizedBox(height: 24),
-
-                    // Action Buttons
                     Wrap(
                       spacing: 16.0,
                       runSpacing: 16.0,
@@ -393,7 +394,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                         ),
-
                         _buildSocialButton(
                           Icons.currency_exchange,
                           "Currency",
@@ -426,12 +426,14 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       appBar: AppBar(
-        title: const Text('My Profile',
-            style: TextStyle(
-              fontSize: 20,
-              letterSpacing: 1,
-              fontWeight: FontWeight.bold,
-            )),
+        title: const Text(
+          'My Profile',
+          style: TextStyle(
+            fontSize: 20,
+            letterSpacing: 1,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),

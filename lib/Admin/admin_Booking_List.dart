@@ -85,6 +85,7 @@ class _AdminBookingScreenState extends State<AdminBookingScreen> {
         })
             .toList();
 
+        if (!mounted) return;
         setState(() {
           bookings = items;
           for (int i = 0; i < items.length; i++) {
@@ -92,14 +93,18 @@ class _AdminBookingScreenState extends State<AdminBookingScreen> {
           }
         });
       } else if (response.errors.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading bookings: ${response.errors.first.message}')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error loading bookings: ${response.errors.first.message}')),
+          );
+        }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load bookings: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load bookings: $e')),
+        );
+      }
     }
   }
 

@@ -23,6 +23,8 @@ class _MainNavigationState extends State<MainNavigation> {
   final List<Widget> _pages = const [
 
     // AdminBookingScreen(),
+    // TourFormScreen(),
+
     HomeScreen(),
     UserBookingScreen(),
     // AdminPromoManager(),
