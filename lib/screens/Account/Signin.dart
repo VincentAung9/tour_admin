@@ -166,7 +166,15 @@ class _SignInScreenState extends State<SignInScreen> with SingleTickerProviderSt
               backgroundColor: Colors.black54,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () async {
+                  final popped = await Navigator.maybePop(context);
+                  if (!popped && mounted) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MainNavigation()),
+                    );
+                  }
+                },
                 tooltip: 'Back',
               ),
             ),
@@ -408,3 +416,4 @@ class _SignInScreenState extends State<SignInScreen> with SingleTickerProviderSt
     );
   }
 }
+
