@@ -214,12 +214,12 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       body: _isLoading
           ? Center(
-        child: Lottie.asset(
-          'assets/loading.json', // Path to your Lottie animation
-          width: 400, // Adjust size as needed
-          height: 400,
+        child: Image.asset(
+          'assets/loading.gif',
+          width: 100,
+          height: 100,
           fit: BoxFit.contain,
-        ),
+        )
       )
           : _userProfile == null
           ? const Center(child: Text('User profile not found'))
@@ -276,10 +276,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                             placeholder: (context, url) =>
-                                Lottie.asset(
-                                  'assets/loading.json', // Path to your Lottie animation
-                                  width: 400, // Adjust size as needed
-                                  height: 400,
+                                Image.asset(
+                                  'assets/loading.gif', // Path to your GIF
+                                  width: 100,          // Keep the same size as before
+                                  height: 100,
                                   fit: BoxFit.contain,
                                 ),
                               errorWidget:

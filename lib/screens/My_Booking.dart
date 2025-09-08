@@ -1,7 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
-import 'dart:convert';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:flutter/services.dart';
 
 enum BookingStatus { PENDING, CONFIRMED, COMPLETED, CANCELED }
 
@@ -140,11 +147,231 @@ class _UserBookingScreenState extends State<UserBookingScreen> with SingleTicker
     }
   }
 
-  String _getMonthYear(String dateStr) {
-    if (dateStr.isEmpty) return 'Unknown';
-    final date = DateTime.parse(dateStr);
-    return '${DateTime.now().year == date.year ? '' : '${date.year} '}${date.month.toString().padLeft(2, '0')}-${date.year.toString().substring(2)}';
+
+
+  Future<void> generateInvoicePdf(Map<String, dynamic> booking) async {
+    final pdf = pw.Document();
+
+    try {
+      final arialFont = pw.Font.ttf(await rootBundle.load('assets/arial.ttf'));
+
+      // Load company logo
+      final logoBytes = await rootBundle.load('assets/logo_header.png');
+      final logoImage = pw.MemoryImage(logoBytes.buffer.asUint8List());
+
+      // Load tour image if available
+      pw.MemoryImage? tourImage;
+      try {
+        if (booking['tourImageUrl'] != null && booking['tourImageUrl'].toString().isNotEmpty) {
+          final tourBytes = (await NetworkAssetBundle(Uri.parse(booking['tourImageUrl'])).load(""))
+              .buffer
+              .asUint8List();
+          tourImage = pw.MemoryImage(tourBytes);
+        }
+      } catch (_) {}
+
+      final date = DateTime.tryParse(booking['bookingDate'] ?? "") ?? DateTime.now();
+      final formattedDate = "${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')} "
+          "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+
+      // Generate QR code (booking ID)
+      final qr = pw.Barcode.qrCode();
+      final qrSvg = qr.toSvg(
+        booking['id'] ?? 'N/A',
+        width: 100,
+        height: 100,
+      );
+
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (pw.Context context) {
+            return pw.Container(
+              padding: const pw.EdgeInsets.all(20),
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  // Header
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Image(logoImage, height: 60),
+                      pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.end,
+                        children: [
+                          pw.Text("INVOICE",
+                              style: pw.TextStyle(
+                                  font: arialFont,
+                                  fontSize: 22,
+                                  fontWeight: pw.FontWeight.bold,
+                                  color: PdfColors.indigo)),
+                          pw.Text("Booking.com Style",
+                              style: pw.TextStyle(font: arialFont, fontSize: 10)),
+                        ],
+                      )
+                    ],
+                  ),
+                  pw.SizedBox(height: 15),
+
+                  // Tour Image
+                  if (tourImage != null)
+                    pw.ClipRRect(
+                      horizontalRadius: 10,
+                      verticalRadius: 10,
+                      child: pw.Image(tourImage, height: 180, fit: pw.BoxFit.cover),
+                    ),
+                  pw.SizedBox(height: 15),
+
+                  // Customer Details
+                  pw.Container(
+                    padding: const pw.EdgeInsets.all(15),
+                    decoration: pw.BoxDecoration(
+                      border: pw.Border.all(color: PdfColors.grey300),
+                      borderRadius: pw.BorderRadius.circular(10),
+                      color: PdfColors.grey100,
+                    ),
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text("Customer Details",
+                            style: pw.TextStyle(
+                                font: arialFont,
+                                fontSize: 14,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.indigo900)),
+                        pw.SizedBox(height: 5),
+                        pw.Text("Name: ${booking['userName'] ?? 'N/A'}"),
+                        pw.Text("Email: ${booking['email'] ?? 'N/A'}"),
+                        pw.Text("Phone: ${booking['phoneNumber'] ?? 'N/A'}"),
+                      ],
+                    ),
+                  ),
+                  pw.SizedBox(height: 15),
+
+                  // Booking Info Card
+                  pw.Container(
+                    padding: const pw.EdgeInsets.all(15),
+                    decoration: pw.BoxDecoration(
+                      border: pw.Border.all(color: PdfColors.grey300),
+                      borderRadius: pw.BorderRadius.circular(10),
+                      color: PdfColors.grey100,
+                    ),
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(booking['tourTitle'] ?? 'Unknown Tour',
+                            style: pw.TextStyle(
+                                font: arialFont,
+                                fontSize: 16,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.indigo900)),
+                        pw.SizedBox(height: 5),
+                        pw.Text(booking['tourLocation'] ?? 'No Location',
+                            style: pw.TextStyle(font: arialFont, fontSize: 12, color: PdfColors.grey800)),
+                        pw.SizedBox(height: 10),
+                        pw.Divider(),
+                        _priceRow("Booking ID", booking['id'] ?? 'N/A'),
+                        _priceRow("Date & Time", formattedDate),
+                        _priceRow("Status", booking['status'] ?? 'PENDING'),
+                      ],
+                    ),
+                  ),
+                  pw.SizedBox(height: 20),
+
+                  // Price Details
+                  pw.Text("Payment Summary",
+                      style: pw.TextStyle(
+                          font: arialFont,
+                          fontSize: 16,
+                          fontWeight: pw.FontWeight.bold,
+                          color: PdfColors.indigo)),
+                  pw.SizedBox(height: 8),
+                  pw.Container(
+                    padding: const pw.EdgeInsets.all(12),
+                    decoration: pw.BoxDecoration(
+                      border: pw.Border.all(color: PdfColors.grey300),
+                      borderRadius: pw.BorderRadius.circular(10),
+                    ),
+                    child: pw.Column(
+                      children: [
+                        _priceRow("Plan", "\$${booking['planPrice']}"),
+                        _priceRow("Service Fee", "\$${booking['serviceFee']}"),
+                        _priceRow("Discount", "-\$${booking['discount']}"),
+                        pw.Divider(),
+                        _priceRow("Total", "\$${booking['totalAmount']}",
+                            isBold: true, color: PdfColors.indigo900),
+                      ],
+                    ),
+                  ),
+                  pw.SizedBox(height: 20),
+
+                  // QR Code
+                  pw.Center(
+                    child: pw.Column(
+                      children: [
+                        pw.Text("Scan QR for Booking Details",
+                            style: pw.TextStyle(font: arialFont, fontSize: 12, color: PdfColors.grey800)),
+                        pw.SizedBox(height: 5),
+                        pw.SvgImage(svg: qrSvg, width: 100, height: 100),
+                      ],
+                    ),
+                  ),
+                  pw.SizedBox(height: 20),
+
+                  // Footer
+                  pw.Center(
+                    child: pw.Text("Thank you for booking with us!",
+                        style: pw.TextStyle(font: arialFont, fontSize: 12, color: PdfColors.grey700)),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+
+      // Save PDF
+      final outputDir = await getTemporaryDirectory();
+      final file = File('${outputDir.path}/invoice_${booking['id']}.pdf');
+      await file.writeAsBytes(await pdf.save());
+
+      // Open PDF
+      if (context.mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => InvoiceViewerScreen(pdfFile: file)),
+        );
+      }
+    } catch (e) {
+      print('Error generating PDF: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to generate PDF: $e')),
+        );
+      }
+    }
   }
+
+// Helper for price rows
+  pw.Widget _priceRow(String label, String value, {bool isBold = false, PdfColor? color}) {
+    return pw.Row(
+      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+      children: [
+        pw.Text(label,
+            style: pw.TextStyle(
+                fontSize: 12,
+                fontWeight: isBold ? pw.FontWeight.bold : pw.FontWeight.normal,
+                color: color ?? PdfColors.black)),
+        pw.Text(value,
+            style: pw.TextStyle(
+                fontSize: 12,
+                fontWeight: isBold ? pw.FontWeight.bold : pw.FontWeight.normal,
+                color: color ?? PdfColors.black)),
+      ],
+    );
+  }
+
+
 
   Widget _buildBookingCard(Map<String, dynamic> booking) {
     final status = BookingStatus.values.firstWhere(
@@ -153,7 +380,6 @@ class _UserBookingScreenState extends State<UserBookingScreen> with SingleTicker
     );
     final statusColor = _getStatusColor(status);
     final date = DateTime.parse(booking['bookingDate'] ?? DateTime.now().toIso8601String());
-    final monthYear = _getMonthYear(booking['bookingDate'] ?? '');
 
     return Card(
       margin: const EdgeInsets.all(8),
@@ -196,20 +422,17 @@ class _UserBookingScreenState extends State<UserBookingScreen> with SingleTicker
                       booking['tourTitle'] ?? 'Unknown Tour',
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: statusColor.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Text(
-                            status.name,
-                            style: const TextStyle(color: Colors.black, fontSize: 12),
-                          ),
-                        ),
-                      ],
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: statusColor.withOpacity(0.2),
+
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Text(
+                        status.name,
+                        style: const TextStyle(color: Colors.black, fontSize: 12),
+                      ),
                     ),
                   ],
                 ),
@@ -226,23 +449,13 @@ class _UserBookingScreenState extends State<UserBookingScreen> with SingleTicker
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('\$${booking['totalAmount'] ?? '0.00'}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    Row(
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/booking-details', arguments: booking['id']);
-                          },
-                          child: const Text('View Details'),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            // Placeholder for download ticket logic
-                          },
-                          child: const Text('Download Ticket'),
-                        ),
-                      ],
-                    ),
+                    Text('\$${booking['totalAmount'] ?? '0.00'}',
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    if (status == BookingStatus.CONFIRMED || status == BookingStatus.COMPLETED)
+                      TextButton(
+                        onPressed: () => generateInvoicePdf(booking),
+                        child: const Text('Download Invoice'),
+                      ),
                   ],
                 ),
               ],
@@ -250,6 +463,18 @@ class _UserBookingScreenState extends State<UserBookingScreen> with SingleTicker
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildBookingsList(BookingStatus status) {
+    final filteredBookings = _filterBookingsByStatus(status);
+    if (filteredBookings.isEmpty) {
+      return const Center(child: Text('No bookings found'));
+    }
+    return ListView.builder(
+      padding: const EdgeInsets.all(8),
+      itemCount: filteredBookings.length,
+      itemBuilder: (context, index) => _buildBookingCard(filteredBookings[index]),
     );
   }
 
@@ -270,11 +495,7 @@ class _UserBookingScreenState extends State<UserBookingScreen> with SingleTicker
         bottom: TabBar(
           labelPadding: const EdgeInsets.symmetric(horizontal: 0),
           controller: _tabController,
-          labelStyle: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1,
-          ),
+          labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1),
           tabs: const [
             Tab(text: 'PENDING'),
             Tab(text: 'CONFIRMED'),
@@ -285,10 +506,7 @@ class _UserBookingScreenState extends State<UserBookingScreen> with SingleTicker
       ),
       body: _isLoading
           ? const Center(
-        child: CupertinoActivityIndicator(
-          radius: 20.0,
-          color: CupertinoColors.activeBlue,
-        ),
+        child: CupertinoActivityIndicator(radius: 20.0, color: CupertinoColors.activeBlue),
       )
           : Column(
         children: [
@@ -307,16 +525,41 @@ class _UserBookingScreenState extends State<UserBookingScreen> with SingleTicker
       ),
     );
   }
+}
 
-  Widget _buildBookingsList(BookingStatus status) {
-    final filteredBookings = _filterBookingsByStatus(status);
-    if (filteredBookings.isEmpty) {
-      return const Center(child: Text('No bookings found'));
+
+class InvoiceViewerScreen extends StatelessWidget {
+  final File pdfFile;
+
+  const InvoiceViewerScreen({super.key, required this.pdfFile});
+
+  void _sharePdf(BuildContext context) async {
+    try {
+      await Share.shareXFiles(
+        [XFile(pdfFile.path)],
+        text: 'Here is your invoice PDF.',
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to share PDF: $e')),
+      );
     }
-    return ListView.builder(
-      padding: const EdgeInsets.all(8),
-      itemCount: filteredBookings.length,
-      itemBuilder: (context, index) => _buildBookingCard(filteredBookings[index]),
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Invoice for Your Booking'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.download),
+            onPressed: () => _sharePdf(context),
+          ),
+        ],
+      ),
+      body: SfPdfViewer.file(pdfFile),
     );
   }
 }
