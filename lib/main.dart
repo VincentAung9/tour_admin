@@ -7,7 +7,6 @@ import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:tour_agent_aws/models/ModelProvider.dart';
 import 'package:tour_agent_aws/screens/Bottom_Nav_Bar.dart';
 import 'amplifyconfiguration.dart';
-import 'screens/Account/Signin.dart';
 
 void main() {
   runApp(const MyApp());
@@ -57,10 +56,6 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
         fontFamily: 'Arial', // Apply Arial font as the default
       ),
-      routes: {
-        '/signin': (context) => const SignInScreen(),
-        // Add other named routes here as needed
-      },
       home: _amplifyConfigured
           ? const MainNavigation()
           : const Scaffold(

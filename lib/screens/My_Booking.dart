@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:flutter/services.dart';
+import 'package:shimmer/shimmer.dart';
 
 enum BookingStatus { PENDING, CONFIRMED, COMPLETED, CANCELED }
 
@@ -375,7 +376,7 @@ class _UserBookingScreenState extends State<UserBookingScreen> with SingleTicker
 
   Widget _buildBookingCard(Map<String, dynamic> booking) {
     final status = BookingStatus.values.firstWhere(
-          (e) => e.name == (booking['status'] ?? 'PENDING'),
+      (e) => e.name == (booking['status'] ?? 'PENDING'),
       orElse: () => BookingStatus.PENDING,
     );
     final statusColor = _getStatusColor(status);
@@ -384,84 +385,119 @@ class _UserBookingScreenState extends State<UserBookingScreen> with SingleTicker
     return Card(
       margin: const EdgeInsets.all(8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              if (booking['tourImageUrl'] != null && booking['tourImageUrl'].toString().isNotEmpty)
-                ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                  child: Image.network(
-                    booking['tourImageUrl'],
-                    height: 150,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey[300]),
+      clipBehavior: Clip.antiAlias,
+      child: SizedBox(
+        height: 220,
+        child: Stack(
+          children: [
+            // Full image background
+            Positioned.fill(
+              child: booking['tourImageUrl'] != null && booking['tourImageUrl'].toString().isNotEmpty
+                  ? Image.network(
+                      booking['tourImageUrl'],
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey[300]),
+                    )
+                  : Container(color: Colors.grey[300]),
+            ),
+            // Overlay with gradient for readability
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withOpacity(0.5),
+                      Colors.black.withOpacity(0.2),
+                      Colors.black.withOpacity(0.7),
+                    ],
                   ),
                 ),
-              Positioned(
-                top: 8,
-                left: 8,
+              ),
+            ),
+            // Status at top right
+            Positioned(
+              top: 16,
+              right: 16,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: statusColor.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(5),
+                ),
                 child: Text(
-                  '${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}',
-                  style: const TextStyle(color: Colors.white, backgroundColor: Colors.black54),
+                  status.name,
+                  style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
                 ),
               ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      booking['tourTitle'] ?? 'Unknown Tour',
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: statusColor.withOpacity(0.2),
-
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Text(
-                        status.name,
-                        style: const TextStyle(color: Colors.black, fontSize: 12),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const Icon(Icons.location_on, size: 16),
-                    Text(booking['tourLocation'] ?? 'No Location', style: const TextStyle(fontSize: 14)),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text('Booking: ${booking['id'] ?? 'N/A'}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('\$${booking['totalAmount'] ?? '0.00'}',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    if (status == BookingStatus.CONFIRMED || status == BookingStatus.COMPLETED)
-                      TextButton(
-                        onPressed: () => generateInvoicePdf(booking),
-                        child: const Text('Download Invoice'),
-                      ),
-                  ],
-                ),
-              ],
             ),
-          ),
-        ],
+            // Date at top left
+            Positioned(
+              top: 16,
+              left: 16,
+              child: Text(
+                '${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}',
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+            ),
+            // Tour title, location, booking ID at bottom left
+            Positioned(
+              left: 16,
+              bottom: 16,
+              right: 120, // leave space for price/button
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    booking['tourTitle'] ?? 'Unknown Tour',
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          booking['tourLocation'] ?? 'No Location',
+                          style: const TextStyle(fontSize: 14, color: Colors.white),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text('Booking: ${booking['id'] ?? 'N/A'}', style: const TextStyle(fontSize: 12, color: Colors.white70)),
+                ],
+              ),
+            ),
+            // Price and button at bottom right
+            Positioned(
+              right: 16,
+              bottom: 16,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '\$${booking['totalAmount'] ?? '0.00'}',
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  if (status == BookingStatus.CONFIRMED || status == BookingStatus.COMPLETED)
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.white.withOpacity(0.8),
+                        foregroundColor: Colors.indigo,
+                      ),
+                      onPressed: () => generateInvoicePdf(booking),
+                      child: const Text('Download Invoice'),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -505,9 +541,62 @@ class _UserBookingScreenState extends State<UserBookingScreen> with SingleTicker
         ),
       ),
       body: _isLoading
-          ? const Center(
-        child: CupertinoActivityIndicator(radius: 20.0, color: CupertinoColors.activeBlue),
-      )
+          ? Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(8),
+                itemCount: 3,
+                itemBuilder: (context, index) => Card(
+                  margin: const EdgeInsets.all(8),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 150,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[400],
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 16,
+                              width: 120,
+                              color: Colors.grey[400],
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 14,
+                              width: 80,
+                              color: Colors.grey[400],
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 12,
+                              width: 100,
+                              color: Colors.grey[400],
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              height: 16,
+                              width: 60,
+                              color: Colors.grey[400],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
           : Column(
         children: [
           Expanded(
