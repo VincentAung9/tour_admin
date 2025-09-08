@@ -179,7 +179,12 @@ class _CreateAccountViewState extends State<CreateAccountView> with SingleTicker
               backgroundColor: Colors.black54,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () async {
+                  final popped = await Navigator.maybePop(context);
+                  if (!popped && mounted) {
+                    Navigator.pushReplacementNamed(context, '/signin');
+                  }
+                },
                 tooltip: 'Back',
               ),
             ),
@@ -452,8 +457,11 @@ class _CreateAccountViewState extends State<CreateAccountView> with SingleTicker
                         TextButton(
                           onPressed: isLoading
                               ? null
-                              : () {
-                            Navigator.pop(context); // Navigate back to sign-in
+                              : () async {
+                            final popped = await Navigator.maybePop(context);
+                            if (!popped && mounted) {
+                              Navigator.pushReplacementNamed(context, '/signin');
+                            }
                           },
                           child: const Text(
                             "Already have an account? Sign In",
@@ -472,3 +480,4 @@ class _CreateAccountViewState extends State<CreateAccountView> with SingleTicker
     );
   }
 }
+
