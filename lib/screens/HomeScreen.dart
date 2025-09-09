@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:async';
+import '../app_debouncer.dart';
 import '../models/UserRole.dart';
 import '../models/tour_model.dart';
 import '../widgets/Search.dart';
@@ -27,7 +28,6 @@ const categories = [
   {'key': 'categories.female_solo', 'icon': Icons.person},
 ];
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double? _exchangeRate;
   bool _isFetchingRate = false;
   bool _showBothCurrencies =
-  false; // Toggle between showing SGD only or both SGD and CNY
+      false; // Toggle between showing SGD only or both SGD and CNY
 
   List<TourModel> _tours = [];
   bool _isLoadingTours = true;
@@ -51,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isLoadingProfile = true;
   bool _isAuthenticated = false;
   StreamSubscription<AuthUser>? _authSubscription;
+  String? searchValue;
 
   @override
   void initState() {
@@ -97,11 +98,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
       final response = await Amplify.API
           .query(
-        request: GraphQLRequest<String>(
-          document: userQuery,
-          variables: {'id': userId},
-        ),
-      )
+            request: GraphQLRequest<String>(
+              document: userQuery,
+              variables: {'id': userId},
+            ),
+          )
           .response;
 
       final exists = response.data != null &&
@@ -133,11 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
         await Amplify.API
             .mutate(
-          request: GraphQLRequest<String>(
-            document: mutation,
-            variables: {'input': newUser.toJson()},
-          ),
-        )
+              request: GraphQLRequest<String>(
+                document: mutation,
+                variables: {'input': newUser.toJson()},
+              ),
+            )
             .response;
 
         debugPrint("User profile created for ID: $userId");
@@ -224,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         if (data['result'] == 'success') {
           double rate =
-          (data['conversion_rates'][_targetCurrency] ?? 0).toDouble();
+              (data['conversion_rates'][_targetCurrency] ?? 0).toDouble();
           if (mounted) {
             setState(() {
               _exchangeRate = rate;
@@ -248,6 +249,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _fetchTours() async {
+    final session = await Amplify.Auth.fetchAuthSession();
+    final bool isSignedIn = session.isSignedIn;
+
     debugPrint('Fetching tours...');
     const query = '''
       query ListTours {
@@ -285,7 +289,12 @@ class _HomeScreenState extends State<HomeScreen> {
     ''';
 
     try {
-      final request = GraphQLRequest<String>(document: query);
+      final request = GraphQLRequest<String>(
+        document: query,
+        authorizationMode: isSignedIn
+            ? APIAuthorizationType.userPools
+            : APIAuthorizationType.iam,
+      );
       final response = await Amplify.API.query(request: request).response;
 
       debugPrint('Tours GraphQL raw response: ${response.data}');
@@ -340,7 +349,7 @@ class _HomeScreenState extends State<HomeScreen> {
         context,
         MaterialPageRoute(
           builder: (context) =>
-          _isAuthenticated ? const ProfilePage() : const SignInScreen(),
+              _isAuthenticated ? const ProfilePage() : const SignInScreen(),
         ));
     if (result == true) {
       final authUser = await Amplify.Auth.getCurrentUser();
@@ -381,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 44,
             fit: BoxFit.cover,
             placeholder: (context, url) =>
-            const CupertinoActivityIndicator(radius: 10),
+                const CupertinoActivityIndicator(radius: 10),
             errorWidget: (context, url, error) {
               debugPrint('❌ Failed to load profile image: $error');
               return const Icon(Icons.person, size: 22, color: Colors.grey);
@@ -393,8 +402,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return FutureBuilder<StorageGetUrlResult>(
       future:
-      Amplify.Storage.getUrl(path: StoragePath.fromString(profileImageUrl!))
-          .result,
+          Amplify.Storage.getUrl(path: StoragePath.fromString(profileImageUrl!))
+              .result,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircleAvatar(
@@ -422,7 +431,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 44,
               fit: BoxFit.cover,
               placeholder: (context, url) =>
-              const CupertinoActivityIndicator(radius: 10),
+                  const CupertinoActivityIndicator(radius: 10),
               errorWidget: (context, url, error) {
                 debugPrint('❌ Failed to load profile image: $error');
                 return const Icon(Icons.person, size: 25, color: Colors.grey);
@@ -434,7 +443,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  List<Widget> _buildTourSections(String? categoryKey) {
+  List<Widget> _buildTourSections(String? categoryKey, String? searchText) {
     // Map categoryKey to display name for sectionMap
     String? displayCategory;
     switch (categoryKey) {
@@ -552,7 +561,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final String sectionTitle = section['title'] ?? 'Untitled Section';
       final String? sectionTag = section['tag'];
 
-      final filteredTours = _tours.where((tour) {
+      var filteredTours = _tours.where((tour) {
         final bool categoryMatches = tour.category == displayCategory;
         final bool tagsContainSectionTag = tour.tags.contains(sectionTag);
 
@@ -565,6 +574,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
         return categoryMatches && tagsContainSectionTag;
       }).toList();
+      if (!(searchText == null) && searchText.isNotEmpty == true) {
+        debugPrint(
+            '------🔥 Filter Filtered Tours: $searchText: ${filteredTours.length}');
+        filteredTours = filteredTours
+            .where((to) =>
+                to.title.toLowerCase().startsWith(searchText.toLowerCase()))
+            .toList();
+      }
 
       if (filteredTours.isNotEmpty) {
         debugPrint(
@@ -584,7 +601,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (tourSectionsWidgets.isEmpty && haveToursForSelectedCategory) {
       final List<TourModel> allToursInSelectedCategory =
-      _tours.where((tour) => tour.category == displayCategory).toList();
+          _tours.where((tour) => tour.category == displayCategory).toList();
       if (allToursInSelectedCategory.isNotEmpty) {
         debugPrint(
             'No specific sections matched, but found ${allToursInSelectedCategory.length} tours for category "$displayCategory". Displaying under "All [Category] Tours".');
@@ -726,7 +743,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -784,16 +802,20 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _isLoadingTours ? _buildShimmerAppBarTitle() : Text('appbar_title'.tr(),
-          style: const TextStyle(
-            letterSpacing: 1,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: _isLoadingTours
+            ? _buildShimmerAppBarTitle()
+            : Text(
+                'appbar_title'.tr(),
+                style: const TextStyle(
+                  letterSpacing: 1,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
         actions: [
           IconButton(
-            icon: Icon(Icons.currency_exchange,
+            icon: Icon(
+              Icons.currency_exchange,
               color: _showBothCurrencies ? Colors.blue : Colors.grey,
             ),
             tooltip: 'Toggle Currency Display',
@@ -815,61 +837,72 @@ class _HomeScreenState extends State<HomeScreen> {
       body: _isLoadingTours
           ? _buildShimmerBody()
           : SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const FilterSearchBar(),
-            SizedBox(
-              height: 100,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  final cat = categories[index];
-                  final String? categoryKey = cat['key'] as String?;
-                  final bool isSelected = _selectedCategory == categoryKey;
-                  return GestureDetector(
-                    onTap: () => setState(() {
-                      _selectedCategory = categoryKey;
-                      debugPrint('Category selected: $_selectedCategory');
-                    }),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CircleAvatar(
-                            radius: 24,
-                            backgroundColor: isSelected
-                                ? Colors.blue
-                                : Colors.grey[200],
-                            child: Icon(
-                              cat['icon'] as IconData,
-                              color: isSelected
-                                  ? Colors.white
-                                  : Colors.black,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FilterSearchBar(
+                    onChangeSearch: (value) {
+                      if (mounted) {
+                        setState(() {
+                          searchValue = value;
+                        });
+                      }
+                    },
+                  ),
+                  SizedBox(
+                    height: 100,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: categories.length,
+                      itemBuilder: (context, index) {
+                        final cat = categories[index];
+                        final String? categoryKey = cat['key'] as String?;
+                        final bool isSelected =
+                            _selectedCategory == categoryKey;
+                        return GestureDetector(
+                          onTap: () => setState(() {
+                            _selectedCategory = categoryKey;
+                            debugPrint('Category selected: $_selectedCategory');
+                          }),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircleAvatar(
+                                  radius: 24,
+                                  backgroundColor: isSelected
+                                      ? Colors.blue
+                                      : Colors.grey[200],
+                                  child: Icon(
+                                    cat['icon'] as IconData,
+                                    color: isSelected
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  (cat['key'] as String).tr(),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 6),
-                          Text(
-                            (cat['key'] as String).tr(),
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                  ..._buildTourSections(_selectedCategory, searchValue),
+                ],
               ),
             ),
-            ..._buildTourSections(_selectedCategory),
-          ],
-        ),
-      ),
     );
   }
 }
