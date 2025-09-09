@@ -19,7 +19,7 @@ class TourCard extends StatelessWidget {
     super.key,
     required this.tour,
     this.exchangeRate,
-    this.targetCurrency = 'CNY',
+    this.targetCurrency = 'SGD', // Changed default to SGD
     this.showBothCurrencies = false,
   });
 
@@ -30,12 +30,15 @@ class TourCard extends StatelessWidget {
     required bool both,
   }) {
     final sgdText = 'SGD ${sgd.toStringAsFixed(2)}';
-    if (rate == null || rate == 0) return sgdText;
-
-    final converted = sgd * rate;
-    final tgtText = '$target ${converted.toStringAsFixed(2)}';
-
-    return both ? '$sgdText · $tgtText' : tgtText;
+    if (both) {
+      if (rate == null || rate == 0) return sgdText;
+      final converted = sgd * rate;
+      final tgtText = '$target ${converted.toStringAsFixed(2)}';
+      return '$sgdText · $tgtText';
+    } else {
+      // Always show SGD when only one currency
+      return sgdText;
+    }
   }
 
   @override
@@ -160,24 +163,46 @@ class TourCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   if (sgdPrice > 0)
-                    Row(
-                      children: [
-                        Text(
-                          priceText,
-                          style: GoogleFonts.poppins(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
+                    showBothCurrencies
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'SGD ${sgdPrice.toStringAsFixed(2)} / pax',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              if (exchangeRate != null && exchangeRate != 0)
+                                Text(
+                                  '$targetCurrency ${(sgdPrice * exchangeRate!).toStringAsFixed(2)} / pax',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              Text(
+                                priceText,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                " / pax",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        Text(
-                          " / pax",
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ],
-                    ),
                 ],
               ),
             ),
