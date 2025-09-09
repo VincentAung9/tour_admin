@@ -606,9 +606,11 @@ class _HomeScreenState extends State<HomeScreen> {
       return [
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text(
-            'No trips found for "${displayCategory ?? 'selected category'}" matching any specific sections. Please ensure your tour data has matching categories and tags in Amplify.',
-            style: const TextStyle(fontSize: 16, color: Colors.grey),
+          child: Center(
+            child: Text(
+              'No trips found for "${displayCategory ?? 'selected category'}"',
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            ),
           ),
         )
       ];

@@ -7,6 +7,7 @@ import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:tour_agent_aws/screens/Bottom_Nav_Bar.dart';
 import 'amplifyconfiguration.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:lottie/lottie.dart';
 
 import 'models/ModelProvider.dart';
 
@@ -96,11 +97,15 @@ class LoadingScreen extends StatelessWidget {
             const Icon(Icons.favorite, size: 50, color: Colors.red),
             const SizedBox(height: 20),
             Text(
-              'welcome'.tr(),
+              'Welcome'.tr(),
               style: const TextStyle(fontSize: 20),
             ),
             const SizedBox(height: 10),
-            const CupertinoActivityIndicator(radius: 20.0, color: CupertinoColors.activeBlue),
+            SizedBox(
+              height: 300,
+              width: 300,
+              child: Lottie.asset('assets/loading.json'),
+            ),
           ],
         ),
       ),

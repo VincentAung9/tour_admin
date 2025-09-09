@@ -46,6 +46,7 @@ flutter:
     - assets/langs/
     - assets/langs/en.json
     - assets/langs/zh.json
+    - assets/loading.json
 
   fonts:
     - family: Arial

@@ -32,7 +32,7 @@
   "loading": "Loading...",
   "please_select_category": "Please select a category to view tours.",
   "no_tours_loaded": "No tours loaded. Please check your backend data and network connection.",
-  "no_trips_matching": "No trips found for \"{category}\" matching any specific sections. Please ensure your tour data has matching categories and tags in Amplify.",
+  "no_trips_matching": "No trips found for \"{category}\" ",
 
   "toggle_currency_display": "Toggle Currency Display",
   "travel_title": "TRAVEL",
