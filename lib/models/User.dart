@@ -142,7 +142,7 @@ class User extends amplify_core.Model {
   }
   
   const User._internal({required this.id, required name, required email, required phone, required nickname, required profile, bookings, required role, createdAt, updatedAt}): _name = name, _email = email, _phone = phone, _nickname = nickname, _profile = profile, _bookings = bookings, _role = role, _createdAt = createdAt, _updatedAt = updatedAt;
-  
+
   factory User({String? id, required String name, required String email, required String phone, required String nickname, required String profile, List<Booking>? bookings, required UserRole role}) {
     return User._internal(
       id: id == null ? amplify_core.UUID.getUUID() : id,
@@ -154,7 +154,7 @@ class User extends amplify_core.Model {
       bookings: bookings != null ? List<Booking>.unmodifiable(bookings) : bookings,
       role: role);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
@@ -251,7 +251,7 @@ class User extends amplify_core.Model {
       _role = amplify_core.enumFromString<UserRole>(json['role'], UserRole.values),
       _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null;
-  
+
   Map<String, dynamic> toJson() => {
     'id': id, 'name': _name, 'email': _email, 'phone': _phone, 'nickname': _nickname, 'profile': _profile, 'bookings': _bookings?.map((Booking? e) => e?.toJson()).toList(), 'role': amplify_core.enumToString(_role), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };

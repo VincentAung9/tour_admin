@@ -1,6 +1,7 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -14,6 +15,7 @@ import 'Account/Create_Account.dart';
 import 'Account/Signin.dart';
 import 'checkout.dart'; // Import TripDaysScreen
 
+/// Shows a modal bottom sheet for choosing a plan for the tour.
 void showDateOptions(BuildContext context, TourModel tour) {
   final List<Map<String, dynamic>> plans = tour.plans ?? [];
 
@@ -32,8 +34,7 @@ void showDateOptions(BuildContext context, TourModel tour) {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Choose a Plan',
+            Text('choose_plan'.tr(),
               style: AppTextStyles.poppinsTitle.copyWith(fontSize: 16),
             ),
             const SizedBox(height: 16),
@@ -42,8 +43,7 @@ void showDateOptions(BuildContext context, TourModel tour) {
               final plan = entry.value;
               final int availability =
                   int.tryParse(plan['availability']?.toString() ?? '0') ?? 0;
-              final availabilityColor =
-              availability > 5
+              final availabilityColor = availability > 5
                   ? Colors.green
                   : availability > 0
                   ? Colors.orange
@@ -66,9 +66,12 @@ void showDateOptions(BuildContext context, TourModel tour) {
             const SizedBox(height: 16),
             Center(
               child: TextButton(
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CreateAccountView())), // Navigating to CreateAccountView
-                child: Text(
-                  'Request new plan',
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) =>
+                        const CreateAccountView())), // Navigating to CreateAccountView
+                child: Text('request_new_plan'.tr(),
                   style: AppTextStyles.poppinsDescription.copyWith(
                     color: Colors.blue,
                     decoration: TextDecoration.underline,
@@ -83,6 +86,7 @@ void showDateOptions(BuildContext context, TourModel tour) {
   );
 }
 
+/// Builds a single date option for the plan selection.
 Widget _buildDateOption({
   required BuildContext context,
   required TourModel tour,
@@ -127,12 +131,14 @@ Widget _buildDateOption({
           ElevatedButton(
             onPressed: () async {
               try {
-                final session = await Amplify.Auth.fetchAuthSession() as CognitoAuthSession;
+                final session =
+                await Amplify.Auth.fetchAuthSession() as CognitoAuthSession;
 
                 if (session.isSignedIn) {
                   // User is logged in, proceed to checkout
                   final selectedPlan = {
-                    'price': double.tryParse(price.replaceAll('SGD ', '')) ?? 0.0,
+                    'price':
+                    double.tryParse(price.replaceAll('SGD ', '')) ?? 0.0,
                     'date': date,
                   };
                   Navigator.push(
@@ -157,7 +163,9 @@ Widget _buildDateOption({
               } catch (e) {
                 // Handle any errors (e.g., network issues, Amplify configuration errors)
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('An error occurred. Please try again.')),
+                    SnackBar(
+                      content: Text('error_occurred'.tr()),
+                    )
                 );
                 // Optionally redirect to sign-in page even on error, as it might be due to auth issues
                 Navigator.push(
@@ -174,7 +182,7 @@ Widget _buildDateOption({
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             ),
             child: Text(
-              'Choose',
+              'choose'.tr(),
               style: AppTextStyles.poppinsDescription.copyWith(
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
@@ -187,13 +195,15 @@ Widget _buildDateOption({
   );
 }
 
-// Helper function to build "What's included" sections
+/// Helper function to build "What's included" sections.
+/// Uses a Flexible layout to adapt to available space.
 Widget buildSection({
   required IconData icon,
   required String title,
   required String description,
 }) {
-  return Expanded(
+  return SizedBox(
+    width: 150, // Fixed width for each item in Wrap, adjust as needed
     child: Column(
       children: [
         Icon(icon, size: 40, color: Colors.blue),
@@ -215,7 +225,7 @@ Widget buildSection({
   );
 }
 
-// Helper function to build Itinerary Items
+/// Helper function to build Itinerary Items.
 Widget buildItineraryItem(String title, String subtitle) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 12.0),
@@ -236,7 +246,7 @@ Widget buildItineraryItem(String title, String subtitle) {
   );
 }
 
-// Helper function to build "Why choose us" rows
+/// Helper function to build "Why choose us" rows.
 Widget buildReasonRow(IconData icon, String title, String description) {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,640 +271,188 @@ Widget buildReasonRow(IconData icon, String title, String description) {
   );
 }
 
-// The main detail screen, now correctly using TourModel
-class TourDetailScreen extends StatelessWidget {
+/// The main detail screen, now correctly using TourModel and responsive layout.
+class TourDetailScreen extends StatefulWidget {
   final TourModel tour; // Receives the TourModel directly
 
   const TourDetailScreen({super.key, required this.tour});
 
   @override
+  State<TourDetailScreen> createState() => _TourDetailScreenState();
+}
+
+class _TourDetailScreenState extends State<TourDetailScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Access properties directly using dot notation.
-    // tour.plans, tour.days, tour.additionalInfo are already List<Map<String, dynamic>>
-    final plans = tour.plans ?? [];
-    final days = tour.days ?? [];
-    final additionalInfo = tour.additionalInfo ?? [];
-
-    final ScrollController _scrollController =
-    ScrollController(); // Need to manage this if screen is StatelessWidget
-
-    // Note: For a StatelessWidget, a ScrollController should ideally be provided
-    // from a parent StatefulWidget or managed differently if its state needs to persist.
-    // For simplicity in this example, it's defined here, but be aware for complex cases.
+    // Access properties directly using dot notation from widget.tour.
+    final plans = widget.tour.plans ?? [];
+    final days = widget.tour.days ?? [];
+    final additionalInfo = widget.tour.additionalInfo ?? [];
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          controller: _scrollController, // Assign the controller
+          controller: _scrollController,
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: CachedNetworkImage(
-                      imageUrl: tour.imageUrl, // Use tour.imageUrl
-                      height: 250,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      placeholder:
-                          (context, url) => const Center(
-                        child: CupertinoActivityIndicator(
-                          radius: 20.0,
-                          color: CupertinoColors.activeBlue,
-                        ),
-                      ),
-                      errorWidget:
-                          (context, url, error) => const Icon(Icons.error),
-                    ),
-                  ),
-                  Positioned(
-                    top: 16,
-                    left: 16,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.black54,
-                      child: IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white),
-                        onPressed: () => Navigator.pop(context),
-                        tooltip: 'Back',
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 16,
-                    right: 16,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.black54,
-                      child: IconButton(
-                        icon: const Icon(Icons.share, color: Colors.white),
-                        onPressed: () {
-                          // TODO: Implement share functionality
-                        },
-                        tooltip: 'Share',
-                      ),
-                    ),
-                  ),
-                ],
-              ).animate().fadeIn(duration: 600.ms),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // This IconButton uses Semantics for accessibility, but its icon and onPressed are conflicting.
-                  // If it's meant to be a back button, it's redundant with the one in Stack.
-                  // If it's for something else (e.g., volume control as icon suggests), clarify.
-                  Semantics(
-                    label: 'Mute/Unmute',
-                    button: true,
-                    child: IconButton(
-                      icon: const Icon(Icons.volume_off),
-                      onPressed: () {
-                        /* Add actual functionality if not for back */
-                      },
-                    ),
-                  ).animate().fadeIn(duration: 600.ms),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => PhotoGalleryScreen(
-                            tourImageUrl:
-                            tour.imageUrl, // Pass tour.imageUrl
-                            days: days, // Pass the parsed days list
-                          ),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'Show all photos',
-                      style: AppTextStyles.poppinsDescription,
-                    ),
-                  ).animate().fadeIn(duration: 600.ms, delay: 200.ms),
-                ],
+          child: Center(
+            // Constrain the content width
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 1200,
               ),
-              const SizedBox(height: 10),
-              Text(
-                tour.title, // Use tour.title
-                style: AppTextStyles.poppinsTitle,
-              ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0.0),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  const Icon(Icons.location_on, color: Colors.black, size: 16),
-                  const SizedBox(width: 4),
-                  Text(
-                    tour.location, // Use tour.location
-                    style: AppTextStyles.loraDescription,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: const Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 20,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    tour.rating.toStringAsFixed(1), // Use tour.rating
-                    style: AppTextStyles.poppinsDescription.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ).animate().fadeIn(duration: 600.ms, delay: 200.ms),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      tour.description, // Use tour.description
-                      style: AppTextStyles.loraDescription,
-                    ),
-                  ),
-                ],
-              ).animate().fadeIn(duration: 600.ms, delay: 300.ms),
-              const SizedBox(height: 10),
-
-              Text(
-                tour.tags.isNotEmpty ? '#${tour.tags.join(' #')}' : '#NoTags',
-                style: AppTextStyles.poppinsDescription.copyWith(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.w500,
-                ),
-              ).animate().fadeIn(duration: 600.ms, delay: 200.ms),
-              const SizedBox(height: 20),
-              if (days.isNotEmpty) // Only show Itinerary Preview if days exist
-                Column(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Itinerary Preview',
-                      style: AppTextStyles.poppinsTitle.copyWith(
-                        fontSize: 20,
-                      ),
-                    )
-                        .animate()
-                        .fadeIn(duration: 600.ms)
-                        .slideY(begin: 0.2, end: 0.0),
+                    _buildImageAndHeader(context), // No need for isLargeScreen param here
                     const SizedBox(height: 10),
-                    SizedBox(
-                      height: 220,
-                      child: GridView.builder(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        physics: const BouncingScrollPhysics(),
-                        gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 1,
-                          mainAxisSpacing: 15,
-                          childAspectRatio: 1.5,
-                        ),
-                        itemCount: days.length,
-                        itemBuilder: (context, index) {
-                          final day = days[index];
-                          return GestureDetector(
-                            onTap:
-                                () => Navigator.push(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Semantics(
+                          label: 'Mute/Unmute',
+                          button: true,
+                          child: IconButton(
+                            icon: const Icon(Icons.volume_off),
+                            onPressed: () {
+                              /* Add actual functionality if not for back */
+                            },
+                          ),
+                        ).animate().fadeIn(duration: 600.ms),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder:
-                                    (context) => TripDaysScreen(
+                                builder: (context) => PhotoGalleryScreen(
+                                  tourImageUrl: widget.tour.imageUrl,
                                   days: days,
-                                ), // Pass the full days list
+                                ),
                               ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                        day['imageUrl'] as String? ?? '',
-                                        height: 120,
-                                        width: 160,
-                                        fit: BoxFit.cover,
-                                        placeholder:
-                                            (context, url) => const Center(
-                                          child: CupertinoActivityIndicator(
-                                            radius: 20.0,
-                                            color:
-                                            CupertinoColors.activeBlue,
-                                          ),
-                                        ),
-                                        errorWidget:
-                                            (context, url, error) =>
-                                        const Icon(Icons.error),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 10,
-                                      left: 10,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.black54,
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          'Day ${index + 1}',
-                                          style: AppTextStyles
-                                              .poppinsDescription
-                                              .copyWith(
-                                            fontSize: 13,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Expanded(
-                                  child: Text(
-                                    day['title'] as String? ?? 'No title',
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              const SizedBox(height: 20),
-              Text(
-                'Why we love this trip',
-                style: AppTextStyles.poppinsTitle.copyWith(fontSize: 20),
-              ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0.0),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.favorite_border,
-                    color: Colors.black,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Awe-inspiring Starry Skies',
-                          style: AppTextStyles.poppinsDescription.copyWith(
-                            fontWeight: FontWeight.w600,
+                            );
+                          },
+                          child: Text('choose_plan'.tr(),
+                            style: AppTextStyles.poppinsDescription,
                           ),
-                        ),
-                        Text(
-                          'See a lifetime worth of stars!',
-                          style: AppTextStyles.loraDescription.copyWith(
-                            fontSize: 12,
-                          ),
-                        ),
+                        ).animate().fadeIn(duration: 600.ms, delay: 200.ms),
                       ],
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  const Icon(Icons.star_border, color: Colors.black, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    const SizedBox(height: 10),
+                    Text(
+                      widget.tour.title,
+                      style: AppTextStyles.poppinsTitle,
+                    ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0.0),
+                    const SizedBox(height: 10),
+                    Row(
                       children: [
+                        const Icon(Icons.location_on, color: Colors.black, size: 16),
+                        const SizedBox(width: 4),
                         Text(
-                          'Ride Camels',
-                          style: AppTextStyles.poppinsDescription.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          'Experience the magic of camel riding!',
-                          style: AppTextStyles.loraDescription.copyWith(
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  const Icon(Icons.star_border, color: Colors.black, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Sandboarding',
-                          style: AppTextStyles.poppinsDescription.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          'Feel the thrill of sandboarding!',
-                          style: AppTextStyles.loraDescription.copyWith(
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              // This seems to be a duplicate description in the UI. Keep or remove as needed.
-              Text(
-                tour.description,
-                style: AppTextStyles.loraDescription,
-              ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0.0),
-              const SizedBox(height: 20),
-              Text(
-                'What\'s included',
-                style: AppTextStyles.poppinsTitle.copyWith(fontSize: 20),
-              ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0.0),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  buildSection(
-                    icon: Icons.restaurant,
-                    title: 'food',
-                    description: 'Meals included as per itinerary',
-                  )
-                      .animate()
-                      .fadeIn(duration: 600.ms)
-                      .slideX(begin: -0.2, end: 0.0),
-                  buildSection(
-                    icon: Icons.directions_car,
-                    title: 'transport',
-                    description: 'Private transfers included',
-                  )
-                      .animate()
-                      .fadeIn(duration: 600.ms, delay: 200.ms)
-                      .slideX(begin: 0.2, end: 0.0),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  buildSection(
-                    icon: Icons.backpack,
-                    title: 'equipment',
-                    description: 'Hiking and camping gear provided',
-                  )
-                      .animate()
-                      .fadeIn(duration: 600.ms)
-                      .slideX(begin: -0.2, end: 0.0),
-                  buildSection(
-                    icon: Icons.hotel,
-                    title: 'lodging',
-                    description: 'Accommodation as per itinerary',
-                  )
-                      .animate()
-                      .fadeIn(duration: 600.ms, delay: 200.ms)
-                      .slideX(begin: 0.2, end: 0.0),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  buildSection(
-                    icon: Icons.person,
-                    title: 'instructor',
-                    description: 'English-speaking guide',
-                  )
-                      .animate()
-                      .fadeIn(duration: 600.ms)
-                      .slideX(begin: -0.2, end: 0.0),
-                  buildSection(
-                    icon: Icons.flight,
-                    title: 'flight',
-                    description: 'Flights not included',
-                  )
-                      .animate()
-                      .fadeIn(duration: 600.ms, delay: 200.ms)
-                      .slideX(begin: 0.2, end: 0.0),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'MORE DETAILS',
-                style: AppTextStyles.poppinsDescription.copyWith(
-                  fontWeight: FontWeight.w600,
-                  decoration: TextDecoration.underline,
-                  letterSpacing: 0.8,
-                ),
-              )
-                  .animate()
-                  .fadeIn(duration: 600.ms)
-                  .scale(
-                begin: const Offset(0.8, 0.8),
-                end: const Offset(1.0, 1.0),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'ITINERARY',
-                    style: AppTextStyles.poppinsTitle.copyWith(
-                      fontSize: 20,
-                    ),
-                  )
-                      .animate()
-                      .fadeIn(duration: 600.ms)
-                      .slideY(begin: 0.2, end: 0.0),
-                  Semantics(
-                    label: 'Share',
-                    button: true,
-                    child: IconButton(
-                      icon: const Icon(Icons.share),
-                      onPressed: () {
-                        // TODO: Implement share functionality
-                      },
-                    ),
-                  ).animate().fadeIn(duration: 600.ms, delay: 200.ms),
-                ],
-              ),
-              const SizedBox(height: 10),
-              if (days
-                  .isNotEmpty) // Ensure this section only shows if days are available
-                ...days.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final day = entry.value;
-                  return buildItineraryItem(
-                    'Day ${index + 1}: ${day['title'] as String? ?? 'No title'}',
-                    day['subtitle'] as String? ?? 'No description',
-                  )
-                      .animate()
-                      .fadeIn(duration: 600.ms)
-                      .slideY(
-                    begin: 0.2,
-                    end: 0.0,
-                    delay: (200 * (index + 1)).ms,
-                  );
-                }),
-              const SizedBox(height: 20),
-              Text(
-                'Additional Information',
-                style: AppTextStyles.poppinsTitle.copyWith(fontSize: 20),
-              ),
-              const SizedBox(height: 10),
-              if (additionalInfo
-                  .isNotEmpty) // Ensure this section only shows if additionalInfo is available
-                ...additionalInfo.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final info = entry.value;
-                  return ExpansionTile(
-                    tilePadding: EdgeInsets.zero,
-                    initiallyExpanded:
-                    index ==
-                        0, // Changed to 0 to expand the first by default
-                    title: Text(
-                      info['title'] as String? ?? 'Info ${index + 1}',
-                      style: AppTextStyles.poppinsDescription.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    trailing: const Icon(Icons.add),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Text(
-                          info['subtitle'] as String? ?? 'No details available',
+                          widget.tour.location,
                           style: AppTextStyles.loraDescription,
                         ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Icon(
+                            Icons.star,
+                            color: Colors.yellow,
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          widget.tour.rating.toStringAsFixed(1),
+                          style: AppTextStyles.poppinsDescription.copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ).animate().fadeIn(duration: 600.ms, delay: 200.ms),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            widget.tour.description,
+                            style: AppTextStyles.loraDescription,
+                          ),
+                        ),
+                      ],
+                    ).animate().fadeIn(duration: 600.ms, delay: 300.ms),
+                    const SizedBox(height: 10),
+
+                    Text(
+                      widget.tour.tags.isNotEmpty ? '#${widget.tour.tags.join(' #')}' : '#NoTags',
+                      style: AppTextStyles.poppinsDescription.copyWith(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.w500,
                       ),
-                    ],
-                  );
-                }),
-              if (additionalInfo.isEmpty)
-                const ExpansionTile(
-                  tilePadding: EdgeInsets.zero,
-                  title: Text(
-                    'No Additional Info',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  trailing: Icon(Icons.add),
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 8.0),
-                      child: Text('No additional information provided.'),
+                    ).animate().fadeIn(duration: 600.ms, delay: 200.ms),
+                    const SizedBox(height: 20),
+                    _buildItineraryPreview(context, days),
+                    // const SizedBox(height: 20),
+                    _buildWhyWeLoveThisTrip(context),
+                    const SizedBox(height: 20),
+                    Text(
+                      widget.tour.description, // Keeping this if it's meant to be a repeated description
+                      style: AppTextStyles.loraDescription,
+                    ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0.0),
+                    const SizedBox(height: 20),
+                    _buildWhatsIncluded(context),
+                    const SizedBox(height: 20),
+                    Text(
+                      'more_details'.tr(),
+                      style: AppTextStyles.poppinsDescription.copyWith(
+                        fontWeight: FontWeight.w600,
+                        decoration: TextDecoration.underline,
+                        letterSpacing: 0.8,
+                      ),
+                    ).animate().fadeIn(duration: 600.ms).scale(
+                      begin: const Offset(0.8, 0.8),
+                      end: const Offset(1.0, 1.0),
                     ),
-                  ],
-                ),
-              const SizedBox(height: 30),
-              Text(
-                'Why choose to travel with us?',
-                style: AppTextStyles.poppinsTitle.copyWith(fontSize: 20),
-              ),
-              const SizedBox(height: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildReasonRow(
-                    Icons.hiking,
-                    'Guides our community trust',
-                    'We work closely with our local partners.',
-                  ),
-                  const SizedBox(height: 16),
-                  buildReasonRow(
-                    Icons.groups,
-                    'Can’t do alone adventures',
-                    'Adventures best experienced with a group.',
-                  ),
-                  const SizedBox(height: 16),
-                  buildReasonRow(
-                    Icons.flag,
-                    'Just show up and enjoy',
-                    'We handle the logistics for you.',
-                  ),
-                ],
-              ),
-              const SizedBox(height: 30),
-              Text(
-                'Have questions?',
-                style: AppTextStyles.poppinsTitle.copyWith(fontSize: 18),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Contact us on Telegram and we will do our best to help you out ✌️',
-                style: AppTextStyles.loraDescription,
-              ),
-              const SizedBox(height: 10),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Launch Telegram contact logic
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    side: const BorderSide(color: Colors.black),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Telegram Contact'),
-                ),
-              ),
-              const SizedBox(height: 30),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        _scrollController.animateTo(
-                          0,
-                          duration: const Duration(milliseconds: 600),
-                          curve: Curves.easeOut,
-                        );
-                      },
-                      child: Text(
-                        'Back to top ⤴️',
-                        style: AppTextStyles.poppinsDescription.copyWith(
-                          color: Colors.blue,
+                    const SizedBox(height: 20),
+                    _buildItinerary(context, days),
+                    const SizedBox(height: 20),
+                    _buildAdditionalInformation(context, additionalInfo),
+                    const SizedBox(height: 30),
+                    _buildWhyChooseUs(context),
+                    const SizedBox(height: 30),
+                    _buildHaveQuestions(context),
+                    const SizedBox(height: 30),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          _scrollController.animateTo(
+                            0,
+                            duration: const Duration(milliseconds: 600),
+                            curve: Curves.easeOut,
+                          );
+                        },
+                        child: Text(
+                          'back_to_top'.tr(),
+                          style: AppTextStyles.poppinsDescription.copyWith(
+                            color: Colors.blue,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -922,15 +480,12 @@ class TourDetailScreen extends StatelessWidget {
                     children: [
                       Text(
                         plans.isNotEmpty && plans[0]['price'] != null
-                            ? 'From SGD ${plans[0]['price']}/pax'
-                            : 'No pricing available',
+                            ? 'from_price_per_pax'.tr(args: ['SGD', plans[0]['price'].toString()])
+                            : 'no_pricing_available'.tr(),
                         style: AppTextStyles.poppinsTitle.copyWith(
                           fontSize: 16,
                         ),
-                      )
-                          .animate()
-                          .fadeIn(duration: 600.ms)
-                          .slideX(begin: -0.2, end: 0.0),
+                      ).animate().fadeIn(duration: 600.ms).slideX(begin: -0.2, end: 0.0),
                       Text(
                         '${plans.length} ${plans.length == 1 ? 'date' : 'dates'} available',
                         style: AppTextStyles.poppinsDescription.copyWith(
@@ -941,9 +496,9 @@ class TourDetailScreen extends StatelessWidget {
                     ],
                   ),
                   ElevatedButton.icon(
-                    onPressed: () => showDateOptions(context, tour),
+                    onPressed: () => showDateOptions(context, widget.tour),
                     icon: const Icon(Icons.date_range),
-                    label: const Text('Show Dates'),
+                    label: Text('show_dates'.tr()),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.indigo,
@@ -967,6 +522,471 @@ class TourDetailScreen extends StatelessWidget {
           ),
         ).animate().slideY(begin: 0.3, end: 0.0, duration: 600.ms),
       ),
+    );
+  }
+
+  // --- Extracted Widgets (parameters adjusted as 'isLargeScreen' is no longer passed everywhere) ---
+
+  Widget _buildImageAndHeader(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600; // Define your breakpoint
+    final imageHeight = isMobile ? 250.0 : 400.0;
+
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: CachedNetworkImage(
+            imageUrl: widget.tour.imageUrl,
+            height: imageHeight,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            placeholder: (context, url) => const Center(
+              child: CupertinoActivityIndicator(
+                radius: 20.0,
+                color: CupertinoColors.activeBlue,
+              ),
+            ),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+          ),
+        ),
+        Positioned(
+          top: 16,
+          left: 16,
+          child: CircleAvatar(
+            backgroundColor: Colors.black54,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => Navigator.pop(context),
+              tooltip: 'Back',
+            ),
+          ),
+        ),
+        Positioned(
+          top: 16,
+          right: 16,
+          child: CircleAvatar(
+            backgroundColor: Colors.black54,
+            child: IconButton(
+              icon: const Icon(Icons.share, color: Colors.white),
+              onPressed: () {
+                // TODO: Implement share functionality
+              },
+              tooltip: 'Share',
+            ),
+          ),
+        ),
+      ],
+    ).animate().fadeIn(duration: 600.ms);
+  }
+
+
+  Widget _buildItineraryPreview(BuildContext context, List<Map<String, dynamic>> days) {
+    if (days.isEmpty) return const SizedBox.shrink();
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final previewHeight = isMobile ? 220.0 : 300.0;
+    final imageHeight = isMobile ? 120.0 : 180.0;
+    final imageWidth = isMobile ? 160.0 : 240.0;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'itinerary_preview'.tr(),
+          style: AppTextStyles.poppinsTitle.copyWith(fontSize: 20),
+        ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0.0),
+        const SizedBox(height: 10),
+        SizedBox(
+          height: previewHeight,
+          child: GridView.builder(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            physics: const BouncingScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1,
+              mainAxisSpacing: 15,
+              childAspectRatio: 1.5,
+            ),
+            itemCount: days.length,
+            itemBuilder: (context, index) {
+              final day = days[index];
+              return GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TripDaysScreen(days: days),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: CachedNetworkImage(
+                            imageUrl: day['imageUrl'] as String? ?? '',
+                            height: imageHeight,
+                            width: imageWidth,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const Center(
+                              child: CupertinoActivityIndicator(
+                                radius: 20.0,
+                                color: CupertinoColors.activeBlue,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => const Icon(Icons.error),
+                          ),
+                        ),
+                        Positioned(
+                          top: 10,
+                          left: 10,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.black54,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'Day ${index + 1}',
+                              style: AppTextStyles.poppinsDescription.copyWith(
+                                fontSize: 13,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Expanded(
+                      child: Text(
+                        day['title'] as String? ?? 'No title',
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWhyWeLoveThisTrip(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'why_we_love'.tr(),
+          style: AppTextStyles.poppinsTitle.copyWith(fontSize: 20),
+        ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0.0),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            const Icon(
+              Icons.favorite_border,
+              color: Colors.black,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'starry_skies_title'.tr(),
+                    style: AppTextStyles.poppinsDescription.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    'starry_skies_desc'.tr(),
+                    style: AppTextStyles.loraDescription.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            const Icon(Icons.star_border, color: Colors.black, size: 20),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'ride_camels_title'.tr(),
+                    style: AppTextStyles.poppinsDescription.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    'ride_camels_desc'.tr(),
+                    style: AppTextStyles.loraDescription.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            const Icon(Icons.star_border, color: Colors.black, size: 20),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'sandboarding_title'.tr(),
+                    style: AppTextStyles.poppinsDescription.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    'sandboarding_desc'.tr(),
+                    style: AppTextStyles.loraDescription.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWhatsIncluded(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'whats_included'.tr(),
+          style: AppTextStyles.poppinsTitle.copyWith(fontSize: 20),
+        ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0.0),
+        const SizedBox(height: 20),
+        Wrap(
+          spacing: 20.0, // horizontal spacing between items
+          runSpacing: 20.0, // vertical spacing between lines
+          alignment: WrapAlignment.start, // Align items to the start
+          children: [
+            buildSection(
+              icon: Icons.restaurant,
+              title: 'food'.tr(),
+              description: 'food_desc'.tr(),
+            ).animate().fadeIn(duration: 600.ms).slideX(begin: -0.2, end: 0.0),
+            buildSection(
+              icon: Icons.directions_car,
+              title: 'transport'.tr(),
+              description: 'transport_desc'.tr(),
+            ).animate().fadeIn(duration: 600.ms, delay: 200.ms).slideX(begin: 0.2, end: 0.0),
+            buildSection(
+              icon: Icons.backpack,
+              title: 'equipment'.tr(),
+              description: 'equipment_desc'.tr(),
+            ).animate().fadeIn(duration: 600.ms).slideX(begin: -0.2, end: 0.0),
+            buildSection(
+              icon: Icons.hotel,
+              title: 'lodging'.tr(),
+              description: 'lodging_desc'.tr(),
+            ).animate().fadeIn(duration: 600.ms, delay: 200.ms).slideX(begin: 0.2, end: 0.0),
+            buildSection(
+              icon: Icons.person,
+              title: 'instructor'.tr(),
+              description: 'instructor_desc'.tr(),
+            ).animate().fadeIn(duration: 600.ms).slideX(begin: -0.2, end: 0.0),
+            buildSection(
+              icon: Icons.flight,
+              title: 'flight'.tr(),
+              description: 'flight_desc'.tr(),
+            ).animate().fadeIn(duration: 600.ms, delay: 200.ms).slideX(begin: 0.2, end: 0.0),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildItinerary(BuildContext context, List<Map<String, dynamic>> days) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'itinerary'.tr(),
+              style: AppTextStyles.poppinsTitle.copyWith(fontSize: 20),
+            ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0.0),
+            Semantics(
+              label: 'Share',
+              button: true,
+              child: IconButton(
+                icon: const Icon(Icons.share),
+                onPressed: () {
+                  // TODO: Implement share functionality
+                },
+              ),
+            ).animate().fadeIn(duration: 600.ms, delay: 200.ms),
+          ],
+        ),
+        const SizedBox(height: 10),
+        if (days.isNotEmpty)
+          ...days.asMap().entries.map((entry) {
+            final index = entry.key;
+            final day = entry.value;
+            return buildItineraryItem(
+              'Day ${index + 1}: ${day['title'] as String? ?? 'No title'}',
+              day['subtitle'] as String? ?? 'No description',
+            ).animate().fadeIn(duration: 600.ms).slideY(
+              begin: 0.2,
+              end: 0.0,
+              delay: (200 * (index + 1)).ms,
+            );
+          }),
+      ],
+    );
+  }
+
+  Widget _buildAdditionalInformation(
+      BuildContext context, List<Map<String, dynamic>> additionalInfo) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'additional_info'.tr(),
+          style: AppTextStyles.poppinsTitle.copyWith(fontSize: 20),
+        ),
+        const SizedBox(height: 10),
+        if (additionalInfo.isNotEmpty)
+          ...additionalInfo.asMap().entries.map((entry) {
+            final index = entry.key;
+            final info = entry.value;
+            return ExpansionTile(
+              tilePadding: EdgeInsets.zero,
+              initiallyExpanded: index == 0,
+              title: Text(
+                info['title'] as String? ?? 'Info ${index + 1}',
+                style: AppTextStyles.poppinsDescription.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              trailing: const Icon(Icons.add),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Text(
+                    info['subtitle'] as String? ?? 'No details available',
+                    style: AppTextStyles.loraDescription,
+                  ),
+                ),
+              ],
+            );
+          }),
+        if (additionalInfo.isEmpty)
+          const ExpansionTile(
+            tilePadding: EdgeInsets.zero,
+            title: Text(
+              'No Additional Info',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+            trailing: Icon(Icons.add),
+            children: [
+              Padding(
+                padding: EdgeInsets.only(bottom: 8.0),
+                child: Text('No additional information provided.'),
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+
+  Widget _buildWhyChooseUs(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'why_choose_us'.tr(),
+          style: AppTextStyles.poppinsTitle.copyWith(fontSize: 20),
+        ),
+        const SizedBox(height: 16),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildReasonRow(
+              Icons.hiking,
+              'guides_community_trust_title'.tr(),
+              'guides_community_trust_desc'.tr(),
+            ),
+            const SizedBox(height: 16),
+            buildReasonRow(
+              Icons.groups,
+              'group_adventures_title'.tr(),
+              'group_adventures_desc'.tr(),
+            ),
+            const SizedBox(height: 16),
+            buildReasonRow(
+              Icons.flag,
+              'show_up_and_enjoy_title'.tr(),
+              'show_up_and_enjoy_desc'.tr(),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHaveQuestions(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'have_questions'.tr(),
+          style: AppTextStyles.poppinsTitle.copyWith(fontSize: 18),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'contact_us'.tr(),
+          style: AppTextStyles.loraDescription,
+        ),
+        const SizedBox(height: 10),
+        Center(
+          child: ElevatedButton(
+            onPressed: () {
+              // Launch Telegram contact logic
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              side: const BorderSide(color: Colors.black),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child:  Text('telegram_contact'.tr()),
+          ),
+        ),
+      ],
     );
   }
 }

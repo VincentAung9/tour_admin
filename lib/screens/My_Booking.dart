@@ -474,8 +474,8 @@ class _UserBookingScreenState extends State<UserBookingScreen> with SingleTicker
             ),
             // Price and button at bottom right
             Positioned(
-              right: 16,
-              bottom: 16,
+              right: 10,
+              bottom: 10,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
@@ -487,6 +487,9 @@ class _UserBookingScreenState extends State<UserBookingScreen> with SingleTicker
                   if (status == BookingStatus.CONFIRMED || status == BookingStatus.COMPLETED)
                     TextButton(
                       style: TextButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10), // 👈 Set radius here
+                        ),
                         backgroundColor: Colors.white.withOpacity(0.8),
                         foregroundColor: Colors.indigo,
                       ),

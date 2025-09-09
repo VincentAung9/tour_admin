@@ -5,16 +5,60 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../models/tour_model.dart';
-import '../screens/detail_page.dart'; // Import TourModel
+import '../screens/detail_page.dart';
 
-// _TourCard widget
-class TourCard extends StatelessWidget { // Renamed from _TourCard to TourCard for direct import
+class TourCard extends StatelessWidget {
   final TourModel tour;
 
-  const TourCard({super.key, required this.tour});
+  // NEW props for currency conversion
+  final double? exchangeRate;        // SGD → target
+  final String targetCurrency;       // e.g. "CNY"
+  final bool showBothCurrencies;     // show both SGD + target
+
+  const TourCard({
+    super.key,
+    required this.tour,
+    this.exchangeRate,
+    this.targetCurrency = 'CNY',
+    this.showBothCurrencies = false,
+  });
+
+  String _formatPrice({
+    required double sgd,
+    double? rate,
+    required String target,
+    required bool both,
+  }) {
+    final sgdText = 'SGD ${sgd.toStringAsFixed(2)}';
+    if (rate == null || rate == 0) return sgdText;
+
+    final converted = sgd * rate;
+    final tgtText = '$target ${converted.toStringAsFixed(2)}';
+
+    return both ? '$sgdText · $tgtText' : tgtText;
+  }
 
   @override
   Widget build(BuildContext context) {
+    // pick a base price (first plan as example)
+    double sgdPrice = 0;
+    if (tour.plans?.isNotEmpty ?? false) {
+      final first = tour.plans!.first;
+      final price = first['price'];
+      if (price is num) {
+        sgdPrice = price.toDouble();
+      } else if (price is String) {
+        sgdPrice = double.tryParse(price) ?? 0;
+      }
+    }
+
+    final priceText = _formatPrice(
+      sgd: sgdPrice,
+      rate: exchangeRate,
+      target: targetCurrency,
+      both: showBothCurrencies,
+    );
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -29,11 +73,14 @@ class TourCard extends StatelessWidget { // Renamed from _TourCard to TourCard f
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3))],
+          boxShadow: const [
+            BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3))
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // --- Image with badge ---
             Stack(
               children: [
                 ClipRRect(
@@ -46,12 +93,15 @@ class TourCard extends StatelessWidget { // Renamed from _TourCard to TourCard f
                     placeholder: (context, url) => Container(
                       height: 140,
                       color: Colors.grey[200],
-                      child: const Center(child: CupertinoActivityIndicator(
-                        radius: 20.0,
-                        color: CupertinoColors.activeBlue,
-                      ),),
+                      child: const Center(
+                        child: CupertinoActivityIndicator(
+                          radius: 20.0,
+                          color: CupertinoColors.activeBlue,
+                        ),
+                      ),
                     ),
-                    errorWidget: (context, url, error) => const Icon(Icons.broken_image, size: 60),
+                    errorWidget: (context, url, error) =>
+                    const Icon(Icons.broken_image, size: 60),
                   ),
                 ),
                 if (tour.badge != null && tour.badge!.isNotEmpty)
@@ -74,9 +124,10 @@ class TourCard extends StatelessWidget { // Renamed from _TourCard to TourCard f
                       ),
                     ),
                   ),
-
               ],
             ),
+
+            // --- Info section ---
             Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -86,29 +137,44 @@ class TourCard extends StatelessWidget { // Renamed from _TourCard to TourCard f
                     tour.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     tour.location,
-                    style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[700]),
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      color: Colors.grey[700],
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     tour.season,
-                    style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey[600]),
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
                   ),
                   const SizedBox(height: 8),
-                  if (tour.plans?.isNotEmpty ?? false)
+                  if (sgdPrice > 0)
                     Row(
                       children: [
                         Text(
-                          "SGD ${tour.plans!.first['price'] ?? '0'}",
-                          style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600),
+                          priceText,
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         Text(
                           " / pax",
-                          style: GoogleFonts.poppins(fontSize: 12, color: Colors.black54),
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.black54,
+                          ),
                         ),
                       ],
                     ),

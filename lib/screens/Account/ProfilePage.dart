@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
-import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart'; // Import Lottie package
+import 'package:intl/intl.dart'; // For date formatting
 
 import '../My_Booking.dart';
 import 'ProfileSetting.dart';
@@ -26,10 +26,17 @@ class _ProfilePageState extends State<ProfilePage> {
   File? _selectedImageFile;
   String _memberSince = 'N/A';
 
+  // Currency exchange state
+  String _baseCurrency = 'SGD';
+  String _targetCurrency = 'CNY';
+  double? _exchangeRate;
+  bool _isFetchingRate = false;
+
   @override
   void initState() {
     super.initState();
     _fetchUserProfile();
+    _fetchExchangeRate();
   }
 
   Future<String?> _getSignedProfileImageUrl(String key) async {
@@ -137,6 +144,66 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> _fetchExchangeRate() async {
+    setState(() {
+      _isFetchingRate = true;
+    });
+    try {
+      final url = Uri.parse(
+          'https://v6.exchangerate-api.com/v6/9581790b050a4d5e97f5e077/latest/$_baseCurrency');
+      final response =
+      await HttpClient().getUrl(url).then((request) => request.close());
+
+      if (response.statusCode == 200) {
+        final responseBody = await response.transform(utf8.decoder).join();
+        final data = jsonDecode(responseBody);
+
+        if (data['result'] == 'success') {
+          double rate = (data['conversion_rates'][_targetCurrency] ?? 0).toDouble();
+          if (mounted) {
+            setState(() {
+              _exchangeRate = rate;
+            });
+          }
+        } else {
+          safePrint('Exchange API failed: ${data['error-type']}');
+        }
+      } else {
+        safePrint('Failed to get exchange rate, status: ${response.statusCode}');
+      }
+    } catch (e) {
+      safePrint('Error fetching exchange rate: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isFetchingRate = false;
+        });
+      }
+    }
+  }
+
+  void _toggleCurrency() {
+    setState(() {
+      if (_baseCurrency == 'SGD') {
+        _baseCurrency = 'CNY';
+        _targetCurrency = 'SGD';
+      } else {
+        _baseCurrency = 'SGD';
+        _targetCurrency = 'CNY';
+      }
+      _exchangeRate = null;
+    });
+    _fetchExchangeRate();
+  }
+
+  String _formatConvertedAmount(double amountInBase) {
+    if (_exchangeRate == null) {
+      return '...';
+    }
+    final convertedAmount = amountInBase * _exchangeRate!;
+    return '${convertedAmount.toStringAsFixed(2)} $_targetCurrency';
+  }
+
   Widget _buildStatColumn(String label, String value) {
     return Column(
       children: [
@@ -207,20 +274,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final profileImageUrl = _selectedImageFile != null
-        ? null
-        : (_userProfile?['profile'] ?? '');
+    final profileImageUrl =
+    _selectedImageFile != null ? null : (_userProfile?['profile'] ?? '');
+
+    // Example amount in base currency
+    final exampleAmount = 100.0;
 
     return Scaffold(
       body: _isLoading
-          ? Center(
-        child: Image.asset(
-          'assets/loading.gif',
-          width: 100,
-          height: 100,
-          fit: BoxFit.contain,
-        )
-      )
+          ? const Center(child: CupertinoActivityIndicator())
           : _userProfile == null
           ? const Center(child: Text('User profile not found'))
           : SingleChildScrollView(
@@ -276,13 +338,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                             placeholder: (context, url) =>
-                                Image.asset(
-                                  'assets/loading.gif', // Path to your GIF
-                                  width: 100,          // Keep the same size as before
-                                  height: 100,
-                                  fit: BoxFit.contain,
-                                ),
-                              errorWidget:
+                            const CupertinoActivityIndicator(),
+                            errorWidget:
                                 (context, url, error) =>
                                 Text(
                                   _userProfile?['name']?[0] ??
@@ -294,8 +351,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                           )
                               : Text(
-                            _userProfile?['name']?[0] ??
-                                'U',
+                            _userProfile?['name']?[0] ?? 'U',
                             style: const TextStyle(
                               fontSize: 32,
                               color: Colors.white,
@@ -305,6 +361,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                     const SizedBox(height: 24),
+
                     Text(
                       _userProfile?['name'] ?? 'No Name Set',
                       style: const TextStyle(
@@ -326,9 +383,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 24),
+
                     Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         _buildStatColumn("Trips Booked", "50"),
                         _buildStatColumn("Reviews Given", "30"),
@@ -336,26 +393,36 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                     const SizedBox(height: 24),
+
                     Divider(color: Colors.grey.shade300),
                     const SizedBox(height: 16),
-                    _buildInfoRow(
-                      Icons.calendar_today,
-                      "Member Since",
-                      _memberSince,
-                    ),
+                    _buildInfoRow(Icons.calendar_today,
+                        'member_since'.tr(), _memberSince),
                     const SizedBox(height: 12),
                     _buildInfoRow(
-                      Icons.email,
-                      "Email",
-                      _userProfile?['email'] ?? 'No Email Set',
-                    ),
+                        Icons.email, 'email'.tr(), _userProfile?['email'] ?? '...'),
                     const SizedBox(height: 12),
                     _buildInfoRow(
-                      Icons.phone,
-                      "Phone",
-                      _userProfile?['phone'] ?? 'No Phone Set',
-                    ),
+                        Icons.phone, 'phone'.tr(), _userProfile?['phone'] ?? '...'),
                     const SizedBox(height: 24),
+
+                    // Example amount display
+                    Text(
+                      'Example amount: $exampleAmount $_baseCurrency',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                    const SizedBox(height: 8),
+
+                    Text(
+                      _isFetchingRate
+                          ? 'Fetching exchange rate...'
+                          : 'Converted: ${_exchangeRate == null ? '...' : _formatConvertedAmount(exampleAmount)}',
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+
+                    const SizedBox(height: 24),
+
                     Wrap(
                       spacing: 16.0,
                       runSpacing: 16.0,
@@ -363,56 +430,65 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                         _buildSocialButton(
                           Icons.book_online,
-                          "All Bookings",
+                          'all_bookings'.tr(),
                               () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                              const UserBookingScreen(),
+                              builder: (context) => const UserBookingScreen(),
                             ),
                           ),
                         ),
                         _buildSocialButton(
                           Icons.favorite_border,
-                          "Saved Trips",
+                          'saved_trips'.tr(),
                               () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                              const UserBookingScreen(),
+                              builder: (context) => const UserBookingScreen(),
                             ),
                           ),
                         ),
                         _buildSocialButton(
                           Icons.support_agent,
-                          "Customer Support",
+                          'customer_support'.tr(),
                               () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                              const UserBookingScreen(),
+                              builder: (context) => const UserBookingScreen(),
                             ),
                           ),
                         ),
                         _buildSocialButton(
                           Icons.currency_exchange,
-                          "Currency",
-                              () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                              const UserBookingScreen(),
-                            ),
-                          ),
+                          'currency'.tr(),
+                          _toggleCurrency,
                         ),
                         _buildSocialButton(
                           Icons.language,
-                          "Language",
-                              () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                              const UserBookingScreen(),
+                          'language'.tr(),
+                              () => showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text('language'.tr()),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ListTile(
+                                    title: const Text('English'),
+                                    onTap: () {
+                                      context.setLocale(const Locale('en'));
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  ListTile(
+                                    title: const Text('中文'),
+                                    onTap: () {
+                                      context.setLocale(const Locale('zh'));
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -426,14 +502,12 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       appBar: AppBar(
-        title: const Text(
-          'My Profile',
-          style: TextStyle(
-            fontSize: 20,
-            letterSpacing: 1,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text('my_profile'.tr(),
+            style: const TextStyle(
+              fontSize: 20,
+              letterSpacing: 1,
+              fontWeight: FontWeight.bold,
+            )),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
