@@ -297,6 +297,19 @@ class _TourDetailScreenState extends State<TourDetailScreen> {
     final days = widget.tour.days ?? [];
     final additionalInfo = widget.tour.additionalInfo ?? [];
 
+    // Calculate the minimum price
+    double? minPrice;
+    if (plans.isNotEmpty) {
+      minPrice = double.tryParse(plans[0]['price']?.toString() ?? '');
+      for (var i = 1; i < plans.length; i++) {
+        final currentPrice = double.tryParse(plans[i]['price']?.toString() ?? '');
+        if (currentPrice != null && (minPrice == null || currentPrice < minPrice)) {
+          minPrice = currentPrice;
+        }
+      }
+    }
+
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -479,8 +492,8 @@ class _TourDetailScreenState extends State<TourDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        plans.isNotEmpty && plans[0]['price'] != null
-                            ? 'from_price_per_pax'.tr(args: ['SGD', plans[0]['price'].toString()])
+                        minPrice != null
+                            ? 'from_price_per_pax'.tr(args: ['SGD', minPrice.toStringAsFixed(0)])
                             : 'no_pricing_available'.tr(),
                         style: AppTextStyles.poppinsTitle.copyWith(
                           fontSize: 16,
