@@ -1,0 +1,142 @@
+{
+
+  "appbar_title": "旅行",
+
+  "categories.date": "约会",
+  "categories.nature": "自然",
+  "categories.adventure": "探险",
+  "categories.culinary": "美食",
+  "categories.wellness": "养生",
+  "categories.family": "家庭",
+  "categories.sustainable": "可持续",
+  "categories.female_solo": "女性独行",
+
+  "my_profile": "我的资料",
+  "member_since": "会员自",
+  "email": "电子邮箱",
+  "phone": "电话",
+  "all_bookings": "所有预订",
+  "saved_trips": "已保存行程",
+  "customer_support": "客户支持",
+  "currency": "货币",
+  "language": "语言",
+
+  "trips_booked": "已预订行程",
+  "reviews_given": "已写评论",
+  "avg_rating": "平均评分",
+
+  "example_amount": "示例金额: {amount} {currency}",
+  "fetching_exchange_rate": "正在获取汇率...",
+  "converted": "已换算: {value}",
+
+  "user_profile_not_found": "未找到用户资料",
+  "loading": "加载中...",
+  "please_select_category": "请选择一个分类以查看旅游项目。",
+  "no_tours_loaded": "未加载到旅游项目。请检查后端数据和网络连接。",
+  "no_trips_matching": "未找到与 \"{category}\" 分类匹配的行程。请确保您的旅游数据在 Amplify 中有对应的分类和标签。",
+
+  "toggle_currency_display": "切换货币显示",
+  "travel_title": "旅行",
+
+  "categories.date": "约会",
+  "categories.nature": "自然",
+  "categories.adventure": "探险",
+  "categories.culinary": "美食",
+  "categories.wellness": "养生",
+  "categories.family": "家庭",
+  "categories.sustainable": "可持续",
+  "categories.female_solo": "女性独行",
+
+  "sections.date.launching_soon": "即将上线",
+  "sections.date.new_releases": "最新发布",
+  "sections.date.trending_today": "今日热门",
+  "sections.date.selling_fast": "热销中",
+  "sections.date.best_sellers": "畅销榜",
+
+  "sections.nature.scenic_trails": "风景小径",
+  "sections.nature.wildlife_encounters": "野生动物邂逅",
+  "sections.nature.lakes_forests": "湖泊与森林",
+  "sections.nature.eco_retreats": "生态度假",
+
+  "sections.adventure.thrill_seekers": "刺激探险",
+  "sections.adventure.extreme_sports": "极限运动",
+  "sections.adventure.mountain_escapes": "山地之旅",
+  "sections.adventure.hiking_climbing": "徒步与攀登",
+
+  "sections.culinary.food_trails": "美食之旅",
+  "sections.culinary.street_food": "街头小吃",
+  "sections.culinary.chef_specials": "主厨特选",
+  "sections.culinary.local_delicacies": "地方美食",
+
+  "sections.wellness.spa_escapes": "水疗养生",
+  "sections.wellness.mindful_retreats": "冥想静修",
+  "sections.wellness.yoga_journeys": "瑜伽之旅",
+  "sections.wellness.detox_healing": "排毒与疗愈",
+
+  "sections.family.fun_for_kids": "儿童乐趣",
+  "sections.family.family_packages": "家庭套票",
+  "sections.family.educational_trips": "教育旅行",
+  "sections.family.theme_parks": "主题乐园及更多",
+
+  "sections.sustainable.eco_friendly_stays": "环保住宿",
+  "sections.sustainable.green_adventures": "绿色探险",
+  "sections.sustainable.sustainable_travel": "可持续旅行",
+  "sections.sustainable.community_tours": "社区旅游",
+
+  "sections.female_solo.women_only_retreats": "女性专属静修",
+  "sections.female_solo.empowering_journeys": "赋能之旅",
+  "sections.female_solo.safe_solo_stays": "安全独行住宿",
+  "sections.female_solo.inspiring_stories": "启发故事",
+
+  "sections.all_category_tours": "所有 {category} 行程",
+
+
+  "choose_plan": "选择套餐",
+  "request_new_plan": "请求新套餐",
+  "error_occurred": "发生错误，请重试。",
+  "choose": "选择",
+  "more_details": "更多详情",
+  "back_to_top": "回到顶部",
+  "from_price_per_pax": "每人起价 {0} {1}",
+  "no_pricing_available": "暂无价格",
+  "show_dates": "查看日期",
+  "itinerary_preview": "行程预览",
+  "itinerary": "行程",
+  "additional_info": "附加信息",
+  "why_we_love": "我们喜欢这次旅行的原因",
+  "whats_included": "包含项目",
+  "why_choose_us": "为什么选择我们",
+  "have_questions": "有疑问吗？",
+  "contact_us": "联系我们获取更多信息。",
+  "telegram_contact": "通过 Telegram 联系我们",
+
+
+  "starry_skies_title": "繁星之下",
+  "starry_skies_desc": "在布满星星的沙漠夜空下入眠。",
+  "ride_camels_title": "骑骆驼",
+  "ride_camels_desc": "骑上骆驼，以传统方式探索沙漠。",
+  "sandboarding_title": "滑沙乐趣",
+  "sandboarding_desc": "从金色沙丘滑下，体验肾上腺素刺激。",
+
+
+  "food": "餐食",
+  "food_desc": "提供行程中注明的餐食。",
+  "transport": "交通",
+  "transport_desc": "所有地面接送与当地交通。",
+  "equipment": "装备",
+  "equipment_desc": "包含基础探险装备。",
+  "lodging": "住宿",
+  "lodging_desc": "舒适的住宿安排。",
+  "instructor": "教练",
+  "instructor_desc": "专业向导与教练。",
+  "flight": "航班",
+  "flight_desc": "国际或国内航班（如包含）。",
+
+
+  "guides_community_trust_title": "值得信赖的向导",
+  "guides_community_trust_desc": "我们的向导深受全球旅行者信任。",
+  "group_adventures_title": "团队探险",
+  "group_adventures_desc": "与志同道合的旅行者一起探索。",
+  "show_up_and_enjoy_title": "轻松出发",
+  "show_up_and_enjoy_desc": "我们安排好一切，让您尽情享受旅程。"
+}

@@ -1,0 +1,141 @@
+{
+  "appbar_title": "TRAVEL",
+
+  "categories.date": "Date",
+  "categories.nature": "Nature",
+  "categories.adventure": "Adventure",
+  "categories.culinary": "Culinary",
+  "categories.wellness": "Wellness",
+  "categories.family": "Family",
+  "categories.sustainable": "Sustainable",
+  "categories.female_solo": "Female Solo",
+
+  "my_profile": "My Profile",
+  "member_since": "Member since",
+  "email": "Email",
+  "phone": "Phone",
+  "all_bookings": "All Bookings",
+  "saved_trips": "Saved Trips",
+  "customer_support": "Customer Support",
+  "currency": "Currency",
+  "language": "Language",
+
+  "trips_booked": "Trips Booked",
+  "reviews_given": "Reviews Given",
+  "avg_rating": "Avg. Rating",
+
+  "example_amount": "Example amount: {amount} {currency}",
+  "fetching_exchange_rate": "Fetching exchange rate...",
+  "converted": "Converted: {value}",
+
+  "user_profile_not_found": "User profile not found",
+  "loading": "Loading...",
+  "please_select_category": "Please select a category to view tours.",
+  "no_tours_loaded": "No tours loaded. Please check your backend data and network connection.",
+  "no_trips_matching": "No trips found for \"{category}\" matching any specific sections. Please ensure your tour data has matching categories and tags in Amplify.",
+
+  "toggle_currency_display": "Toggle Currency Display",
+  "travel_title": "TRAVEL",
+
+  "categories.date": "Date",
+  "categories.nature": "Nature",
+  "categories.adventure": "Adventure",
+  "categories.culinary": "Culinary",
+  "categories.wellness": "Wellness",
+  "categories.family": "Family",
+  "categories.sustainable": "Sustainable",
+  "categories.female_solo": "Female Solo",
+
+  "sections.date.launching_soon": "Launching Soon",
+  "sections.date.new_releases": "New Releases",
+  "sections.date.trending_today": "Trending Today",
+  "sections.date.selling_fast": "Selling Fast",
+  "sections.date.best_sellers": "Best Sellers",
+
+  "sections.nature.scenic_trails": "Scenic Trails",
+  "sections.nature.wildlife_encounters": "Wildlife Encounters",
+  "sections.nature.lakes_forests": "Lakes & Forests",
+  "sections.nature.eco_retreats": "Eco Retreats",
+
+  "sections.adventure.thrill_seekers": "Thrill Seekers",
+  "sections.adventure.extreme_sports": "Extreme Sports",
+  "sections.adventure.mountain_escapes": "Mountain Escapes",
+  "sections.adventure.hiking_climbing": "Hiking & Climbing",
+
+  "sections.culinary.food_trails": "Food Trails",
+  "sections.culinary.street_food": "Street Food Gems",
+  "sections.culinary.chef_specials": "Chef’s Specials",
+  "sections.culinary.local_delicacies": "Local Delicacies",
+
+  "sections.wellness.spa_escapes": "Spa Escapes",
+  "sections.wellness.mindful_retreats": "Mindful Retreats",
+  "sections.wellness.yoga_journeys": "Yoga Journeys",
+  "sections.wellness.detox_healing": "Detox & Healing",
+
+  "sections.family.fun_for_kids": "Fun for Kids",
+  "sections.family.family_packages": "Family Packages",
+  "sections.family.educational_trips": "Educational Trips",
+  "sections.family.theme_parks": "Theme Parks & More",
+
+  "sections.sustainable.eco_friendly_stays": "Eco-Friendly Stays",
+  "sections.sustainable.green_adventures": "Green Adventures",
+  "sections.sustainable.sustainable_travel": "Sustainable Travel",
+  "sections.sustainable.community_tours": "Community Tours",
+
+  "sections.female_solo.women_only_retreats": "Women-Only Retreats",
+  "sections.female_solo.empowering_journeys": "Empowering Journeys",
+  "sections.female_solo.safe_solo_stays": "Safe Solo Stays",
+  "sections.female_solo.inspiring_stories": "Inspiring Stories",
+
+  "sections.all_category_tours": "All {category} Tours",
+
+
+  "choose_plan": "Choose a Plan",
+  "request_new_plan": "Request a New Plan",
+  "error_occurred": "An error occurred. Please try again.",
+  "choose": "Choose",
+  "more_details": "More Details",
+  "back_to_top": "Back to Top",
+  "from_price_per_pax": "From {0} {1} per person",
+  "no_pricing_available": "No pricing available",
+  "show_dates": "Show Dates",
+  "itinerary_preview": "Itinerary Preview",
+  "itinerary": "Itinerary",
+  "additional_info": "Additional Information",
+  "why_we_love": "Why We Love This Trip",
+  "whats_included": "What's Included",
+  "why_choose_us": "Why Choose Us",
+  "have_questions": "Have Questions?",
+  "contact_us": "Contact us for more information.",
+  "telegram_contact": "Contact us on Telegram",
+
+
+  "starry_skies_title": "Under Starry Skies",
+  "starry_skies_desc": "Sleep beneath the vast desert sky filled with stars.",
+  "ride_camels_title": "Ride Camels",
+  "ride_camels_desc": "Experience the desert the traditional way on camelback.",
+  "sandboarding_title": "Sandboarding Fun",
+  "sandboarding_desc": "Glide down golden dunes for an adrenaline rush.",
+
+
+  "food": "Food",
+  "food_desc": "Meals provided as mentioned in the itinerary.",
+  "transport": "Transport",
+  "transport_desc": "All ground transfers and local transport.",
+  "equipment": "Equipment",
+  "equipment_desc": "Basic adventure equipment included.",
+  "lodging": "Lodging",
+  "lodging_desc": "Comfortable stays during your journey.",
+  "instructor": "Instructor",
+  "instructor_desc": "Professional guides and instructors.",
+  "flight": "Flights",
+  "flight_desc": "International or domestic flights (if included).",
+
+
+  "guides_community_trust_title": "Trusted Guides",
+  "guides_community_trust_desc": "Our guides are trusted by travelers worldwide.",
+  "group_adventures_title": "Group Adventures",
+  "group_adventures_desc": "Travel with like-minded explorers for shared experiences.",
+  "show_up_and_enjoy_title": "Just Show Up",
+  "show_up_and_enjoy_desc": "We handle the details so you can simply enjoy your trip."
+}
