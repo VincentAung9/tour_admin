@@ -133,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       final picker = ImagePicker();
       final picked =
-      await picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
+          await picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
       if (picked != null) {
         setState(() {
           _selectedImageFile = File(picked.path);
@@ -152,14 +152,15 @@ class _ProfilePageState extends State<ProfilePage> {
       final url = Uri.parse(
           'https://v6.exchangerate-api.com/v6/9581790b050a4d5e97f5e077/latest/$_baseCurrency');
       final response =
-      await HttpClient().getUrl(url).then((request) => request.close());
+          await HttpClient().getUrl(url).then((request) => request.close());
 
       if (response.statusCode == 200) {
         final responseBody = await response.transform(utf8.decoder).join();
         final data = jsonDecode(responseBody);
 
         if (data['result'] == 'success') {
-          double rate = (data['conversion_rates'][_targetCurrency] ?? 0).toDouble();
+          double rate =
+              (data['conversion_rates'][_targetCurrency] ?? 0).toDouble();
           if (mounted) {
             setState(() {
               _exchangeRate = rate;
@@ -169,7 +170,8 @@ class _ProfilePageState extends State<ProfilePage> {
           safePrint('Exchange API failed: ${data['error-type']}');
         }
       } else {
-        safePrint('Failed to get exchange rate, status: ${response.statusCode}');
+        safePrint(
+            'Failed to get exchange rate, status: ${response.statusCode}');
       }
     } catch (e) {
       safePrint('Error fetching exchange rate: $e');
@@ -255,7 +257,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildSocialButton(IconData icon, String label, VoidCallback onPressed) {
+  Widget _buildSocialButton(
+      IconData icon, String label, VoidCallback onPressed) {
     return ElevatedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon, color: Colors.white),
@@ -275,7 +278,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final profileImageUrl =
-    _selectedImageFile != null ? null : (_userProfile?['profile'] ?? '');
+        _selectedImageFile != null ? null : (_userProfile?['profile'] ?? '');
 
     // Example amount in base currency
     final exampleAmount = 100.0;
@@ -284,223 +287,230 @@ class _ProfilePageState extends State<ProfilePage> {
       body: _isLoading
           ? const Center(child: CupertinoActivityIndicator())
           : _userProfile == null
-          ? const Center(child: Text('User profile not found'))
-          : SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(24.0),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.blue.shade50, Colors.purple.shade50],
-            ),
-          ),
-          child: Center(
-            child: Card(
-              elevation: 16.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 64,
-                          backgroundColor: Colors.blue.shade400,
-                          child: _selectedImageFile != null
-                              ? ClipOval(
-                            child: Image.file(
-                              _selectedImageFile!,
-                              width: 128,
-                              height: 128,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                              : (profileImageUrl.isNotEmpty
-                              ? CachedNetworkImage(
-                            imageUrl: profileImageUrl,
-                            imageBuilder:
-                                (context, imageProvider) =>
-                                Container(
-                                  width: 128,
-                                  height: 128,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                            placeholder: (context, url) =>
-                            const CupertinoActivityIndicator(),
-                            errorWidget:
-                                (context, url, error) =>
-                                Text(
-                                  _userProfile?['name']?[0] ??
-                                      'U',
-                                  style: const TextStyle(
-                                    fontSize: 32,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                          )
-                              : Text(
-                            _userProfile?['name']?[0] ?? 'U',
-                            style: const TextStyle(
-                              fontSize: 32,
-                              color: Colors.white,
-                            ),
-                          )),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-
-                    Text(
-                      _userProfile?['name'] ?? 'No Name Set',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        letterSpacing: 1,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF333333),
+              ? const Center(child: Text('User profile not found'))
+              : SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.all(24.0),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Colors.blue.shade50, Colors.purple.shade50],
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _userProfile?['nickname'] ?? 'Traveler',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.blue.shade600,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 24),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildStatColumn("Trips Booked", "50"),
-                        _buildStatColumn("Reviews Given", "30"),
-                        _buildStatColumn("Avg. Rating", "4.5"),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-
-                    Divider(color: Colors.grey.shade300),
-                    const SizedBox(height: 16),
-                    _buildInfoRow(Icons.calendar_today,
-                        'member_since'.tr(), _memberSince),
-                    const SizedBox(height: 12),
-                    _buildInfoRow(
-                        Icons.email, 'email'.tr(), _userProfile?['email'] ?? '...'),
-                    const SizedBox(height: 12),
-                    _buildInfoRow(
-                        Icons.phone, 'phone'.tr(), _userProfile?['phone'] ?? '...'),
-                    const SizedBox(height: 24),
-
-                    // Example amount display
-                    Text(
-                      'Example amount: $exampleAmount $_baseCurrency',
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    const SizedBox(height: 8),
-
-                    Text(
-                      _isFetchingRate
-                          ? 'Fetching exchange rate...'
-                          : 'Converted: ${_exchangeRate == null ? '...' : _formatConvertedAmount(exampleAmount)}',
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    Wrap(
-                      spacing: 16.0,
-                      runSpacing: 16.0,
-                      alignment: WrapAlignment.center,
-                      children: [
-                        _buildSocialButton(
-                          Icons.book_online,
-                          'all_bookings'.tr(),
-                              () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const UserBookingScreen(),
-                            ),
-                          ),
+                    child: Center(
+                      child: Card(
+                        elevation: 16.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24.0),
                         ),
-                        _buildSocialButton(
-                          Icons.favorite_border,
-                          'saved_trips'.tr(),
-                              () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const UserBookingScreen(),
-                            ),
-                          ),
-                        ),
-                        _buildSocialButton(
-                          Icons.support_agent,
-                          'customer_support'.tr(),
-                              () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const UserBookingScreen(),
-                            ),
-                          ),
-                        ),
-                        _buildSocialButton(
-                          Icons.currency_exchange,
-                          'currency'.tr(),
-                          _toggleCurrency,
-                        ),
-                        _buildSocialButton(
-                          Icons.language,
-                          'language'.tr(),
-                              () => showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text('language'.tr()),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
+                        child: Padding(
+                          padding: const EdgeInsets.all(32.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Stack(
                                 children: [
-                                  ListTile(
-                                    title: const Text('English'),
-                                    onTap: () {
-                                      context.setLocale(const Locale('en'));
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  ListTile(
-                                    title: const Text('中文'),
-                                    onTap: () {
-                                      context.setLocale(const Locale('zh'));
-                                      Navigator.pop(context);
-                                    },
+                                  CircleAvatar(
+                                    radius: 64,
+                                    backgroundColor: Colors.blue.shade400,
+                                    child: _selectedImageFile != null
+                                        ? ClipOval(
+                                            child: Image.file(
+                                              _selectedImageFile!,
+                                              width: 128,
+                                              height: 128,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          )
+                                        : (profileImageUrl.isNotEmpty
+                                            ? CachedNetworkImage(
+                                                imageUrl: profileImageUrl,
+                                                imageBuilder:
+                                                    (context, imageProvider) =>
+                                                        Container(
+                                                  width: 128,
+                                                  height: 128,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                                placeholder: (context, url) =>
+                                                    const CupertinoActivityIndicator(),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Text(
+                                                  _userProfile?['name']?[0] ??
+                                                      'U',
+                                                  style: const TextStyle(
+                                                    fontSize: 32,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              )
+                                            : Text(
+                                                _userProfile?['name']?[0] ??
+                                                    'U',
+                                                style: const TextStyle(
+                                                  fontSize: 32,
+                                                  color: Colors.white,
+                                                ),
+                                              )),
                                   ),
                                 ],
                               ),
-                            ),
+                              const SizedBox(height: 24),
+
+                              Text(
+                                _userProfile?['name'] ?? 'No Name Set',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  letterSpacing: 1,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF333333),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                _userProfile?['nickname'] ?? 'Traveler',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.blue.shade600,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 24),
+
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  _buildStatColumn("Trips Booked", "50"),
+                                  _buildStatColumn("Reviews Given", "30"),
+                                  _buildStatColumn("Avg. Rating", "4.5"),
+                                ],
+                              ),
+                              const SizedBox(height: 24),
+
+                              Divider(color: Colors.grey.shade300),
+                              const SizedBox(height: 16),
+                              _buildInfoRow(Icons.calendar_today,
+                                  'member_since'.tr(), _memberSince),
+                              const SizedBox(height: 12),
+                              _buildInfoRow(Icons.email, 'email'.tr(),
+                                  _userProfile?['email'] ?? '...'),
+                              const SizedBox(height: 12),
+                              _buildInfoRow(Icons.phone, 'phone'.tr(),
+                                  _userProfile?['phone'] ?? '...'),
+                              const SizedBox(height: 24),
+
+                              // Example amount display
+                              Text(
+                                'Example amount: $exampleAmount $_baseCurrency',
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                              const SizedBox(height: 8),
+
+                              Text(
+                                _isFetchingRate
+                                    ? 'Fetching exchange rate...'
+                                    : 'Converted: ${_exchangeRate == null ? '...' : _formatConvertedAmount(exampleAmount)}',
+                                style: const TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+
+                              const SizedBox(height: 24),
+
+                              Wrap(
+                                spacing: 16.0,
+                                runSpacing: 16.0,
+                                alignment: WrapAlignment.center,
+                                children: [
+                                  _buildSocialButton(
+                                    Icons.book_online,
+                                    'all_bookings'.tr(),
+                                    () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const UserBookingScreen(),
+                                      ),
+                                    ),
+                                  ),
+                                  _buildSocialButton(
+                                    Icons.favorite_border,
+                                    'saved_trips'.tr(),
+                                    () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const UserBookingScreen(),
+                                      ),
+                                    ),
+                                  ),
+                                  _buildSocialButton(
+                                    Icons.support_agent,
+                                    'customer_support'.tr(),
+                                    () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const UserBookingScreen(),
+                                      ),
+                                    ),
+                                  ),
+                                  _buildSocialButton(
+                                    Icons.currency_exchange,
+                                    'currency'.tr(),
+                                    _toggleCurrency,
+                                  ),
+                                  _buildSocialButton(
+                                    Icons.language,
+                                    'language'.tr(),
+                                    () => showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: Text('language'.tr()),
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            ListTile(
+                                              title: const Text('English'),
+                                              onTap: () {
+                                                context.setLocale(
+                                                    const Locale('en'));
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                            ListTile(
+                                              title: const Text('中文'),
+                                              onTap: () {
+                                                context.setLocale(
+                                                    const Locale('zh'));
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ),
-        ),
-      ),
       appBar: AppBar(
         title: Text('my_profile'.tr(),
             style: const TextStyle(

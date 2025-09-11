@@ -14,7 +14,7 @@ type User
   @model
   @auth(
     rules: [
-      { allow: public, provider: identityPool, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
       {
         allow: private
         provider: userPools
@@ -36,7 +36,7 @@ type Tour
   @model
   @auth(
     rules: [
-      { allow: public, provider: identityPool, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
       {
         allow: private
         provider: userPools
@@ -65,6 +65,7 @@ type Tour
   createdAt: AWSDateTime!
   badge: String!
   meetingPoint: MeetingPoint
+  country: String
 }
 
 type Booking
@@ -108,7 +109,7 @@ type PromoCode
   @model
   @auth(
     rules: [
-      { allow: public, provider: identityPool, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
       {
         allow: private
         provider: userPools
@@ -133,7 +134,7 @@ type Review
   @model
   @auth(
     rules: [
-      { allow: public, provider: identityPool, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
       {
         allow: private
         provider: userPools
@@ -155,7 +156,7 @@ type Schedule
   @model
   @auth(
     rules: [
-      { allow: public, provider: identityPool, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
       {
         allow: private
         provider: userPools
@@ -218,7 +219,7 @@ type UserVideo
   @model
   @auth(
     rules: [
-      { allow: public, provider: identityPool, operations: [read] }
+      { allow: public, provider: iam, operations: [read] }
       {
         allow: private
         provider: userPools

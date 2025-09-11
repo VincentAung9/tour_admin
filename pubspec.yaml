@@ -1,9 +1,9 @@
 name: tour_agent_aws
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 environment:
-  sdk: '>=3.0.0 <4.0.0' # Keep this as your Flutter SDK allows
+  sdk: ">=3.0.0 <4.0.0" # Keep this as your Flutter SDK allows
 dependencies:
   flutter:
     sdk: flutter
@@ -37,7 +37,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0 # Updated for compatibility
-
 
 flutter:
   uses-material-design: true

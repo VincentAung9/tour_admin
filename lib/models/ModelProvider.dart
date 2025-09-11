@@ -54,7 +54,7 @@ export 'UserVideo.dart';
 
 class ModelProvider implements amplify_core.ModelProviderInterface {
   @override
-  String version = "f3cd390ca149f8d0c0438988961d2b86";
+  String version = "5c09d6277ce7017a57c049b27d7251ce";
   @override
   List<amplify_core.ModelSchema> modelSchemas = [Booking.schema, ChatMessage.schema, Notification.schema, PromoCode.schema, Review.schema, Schedule.schema, Tour.schema, User.schema, UserVideo.schema];
   @override

@@ -48,6 +48,7 @@ class Tour extends amplify_core.Model {
   final amplify_core.TemporalDateTime? _createdAt;
   final String? _badge;
   final MeetingPoint? _meetingPoint;
+  final String? _country;
   final amplify_core.TemporalDateTime? _updatedAt;
 
   @override
@@ -269,13 +270,17 @@ class Tour extends amplify_core.Model {
     return _meetingPoint;
   }
   
+  String? get country {
+    return _country;
+  }
+  
   amplify_core.TemporalDateTime? get updatedAt {
     return _updatedAt;
   }
   
-  const Tour._internal({required this.id, required title, required location, required description, required imageUrl, galleryImages, required passengers, required season, required rating, required category, required tags, required plans, required days, additionalInfo, guide, schedules, reviews, required createdBy, required createdAt, required badge, meetingPoint, updatedAt}): _title = title, _location = location, _description = description, _imageUrl = imageUrl, _galleryImages = galleryImages, _passengers = passengers, _season = season, _rating = rating, _category = category, _tags = tags, _plans = plans, _days = days, _additionalInfo = additionalInfo, _guide = guide, _schedules = schedules, _reviews = reviews, _createdBy = createdBy, _createdAt = createdAt, _badge = badge, _meetingPoint = meetingPoint, _updatedAt = updatedAt;
+  const Tour._internal({required this.id, required title, required location, required description, required imageUrl, galleryImages, required passengers, required season, required rating, required category, required tags, required plans, required days, additionalInfo, guide, schedules, reviews, required createdBy, required createdAt, required badge, meetingPoint, country, updatedAt}): _title = title, _location = location, _description = description, _imageUrl = imageUrl, _galleryImages = galleryImages, _passengers = passengers, _season = season, _rating = rating, _category = category, _tags = tags, _plans = plans, _days = days, _additionalInfo = additionalInfo, _guide = guide, _schedules = schedules, _reviews = reviews, _createdBy = createdBy, _createdAt = createdAt, _badge = badge, _meetingPoint = meetingPoint, _country = country, _updatedAt = updatedAt;
   
-  factory Tour({String? id, required String title, required String location, required String description, required String imageUrl, List<String>? galleryImages, required String passengers, required String season, required double rating, required String category, required List<String> tags, required List<Plan> plans, required List<Day> days, List<Info>? additionalInfo, TourGuide? guide, List<Schedule>? schedules, List<Review>? reviews, required String createdBy, required amplify_core.TemporalDateTime createdAt, required String badge, MeetingPoint? meetingPoint}) {
+  factory Tour({String? id, required String title, required String location, required String description, required String imageUrl, List<String>? galleryImages, required String passengers, required String season, required double rating, required String category, required List<String> tags, required List<Plan> plans, required List<Day> days, List<Info>? additionalInfo, TourGuide? guide, List<Schedule>? schedules, List<Review>? reviews, required String createdBy, required amplify_core.TemporalDateTime createdAt, required String badge, MeetingPoint? meetingPoint, String? country}) {
     return Tour._internal(
       id: id == null ? amplify_core.UUID.getUUID() : id,
       title: title,
@@ -297,7 +302,8 @@ class Tour extends amplify_core.Model {
       createdBy: createdBy,
       createdAt: createdAt,
       badge: badge,
-      meetingPoint: meetingPoint);
+      meetingPoint: meetingPoint,
+      country: country);
   }
   
   bool equals(Object other) {
@@ -328,7 +334,8 @@ class Tour extends amplify_core.Model {
       _createdBy == other._createdBy &&
       _createdAt == other._createdAt &&
       _badge == other._badge &&
-      _meetingPoint == other._meetingPoint;
+      _meetingPoint == other._meetingPoint &&
+      _country == other._country;
   }
   
   @override
@@ -358,13 +365,14 @@ class Tour extends amplify_core.Model {
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("badge=" + "$_badge" + ", ");
     buffer.write("meetingPoint=" + (_meetingPoint != null ? _meetingPoint!.toString() : "null") + ", ");
+    buffer.write("country=" + "$_country" + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Tour copyWith({String? title, String? location, String? description, String? imageUrl, List<String>? galleryImages, String? passengers, String? season, double? rating, String? category, List<String>? tags, List<Plan>? plans, List<Day>? days, List<Info>? additionalInfo, TourGuide? guide, List<Schedule>? schedules, List<Review>? reviews, String? createdBy, amplify_core.TemporalDateTime? createdAt, String? badge, MeetingPoint? meetingPoint}) {
+  Tour copyWith({String? title, String? location, String? description, String? imageUrl, List<String>? galleryImages, String? passengers, String? season, double? rating, String? category, List<String>? tags, List<Plan>? plans, List<Day>? days, List<Info>? additionalInfo, TourGuide? guide, List<Schedule>? schedules, List<Review>? reviews, String? createdBy, amplify_core.TemporalDateTime? createdAt, String? badge, MeetingPoint? meetingPoint, String? country}) {
     return Tour._internal(
       id: id,
       title: title ?? this.title,
@@ -386,7 +394,8 @@ class Tour extends amplify_core.Model {
       createdBy: createdBy ?? this.createdBy,
       createdAt: createdAt ?? this.createdAt,
       badge: badge ?? this.badge,
-      meetingPoint: meetingPoint ?? this.meetingPoint);
+      meetingPoint: meetingPoint ?? this.meetingPoint,
+      country: country ?? this.country);
   }
   
   Tour copyWithModelFieldValues({
@@ -409,7 +418,8 @@ class Tour extends amplify_core.Model {
     ModelFieldValue<String>? createdBy,
     ModelFieldValue<amplify_core.TemporalDateTime>? createdAt,
     ModelFieldValue<String>? badge,
-    ModelFieldValue<MeetingPoint?>? meetingPoint
+    ModelFieldValue<MeetingPoint?>? meetingPoint,
+    ModelFieldValue<String?>? country
   }) {
     return Tour._internal(
       id: id,
@@ -432,7 +442,8 @@ class Tour extends amplify_core.Model {
       createdBy: createdBy == null ? this.createdBy : createdBy.value,
       createdAt: createdAt == null ? this.createdAt : createdAt.value,
       badge: badge == null ? this.badge : badge.value,
-      meetingPoint: meetingPoint == null ? this.meetingPoint : meetingPoint.value
+      meetingPoint: meetingPoint == null ? this.meetingPoint : meetingPoint.value,
+      country: country == null ? this.country : country.value
     );
   }
   
@@ -505,10 +516,11 @@ class Tour extends amplify_core.Model {
               ? MeetingPoint.fromJson(new Map<String, dynamic>.from(json['meetingPoint']['serializedData']))
               : MeetingPoint.fromJson(new Map<String, dynamic>.from(json['meetingPoint']))
         : null,
+      _country = json['country'],
       _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'title': _title, 'location': _location, 'description': _description, 'imageUrl': _imageUrl, 'galleryImages': _galleryImages, 'passengers': _passengers, 'season': _season, 'rating': _rating, 'category': _category, 'tags': _tags, 'plans': _plans?.map((Plan? e) => e?.toJson()).toList(), 'days': _days?.map((Day? e) => e?.toJson()).toList(), 'additionalInfo': _additionalInfo?.map((Info? e) => e?.toJson()).toList(), 'guide': _guide?.toJson(), 'schedules': _schedules?.map((Schedule? e) => e?.toJson()).toList(), 'reviews': _reviews?.map((Review? e) => e?.toJson()).toList(), 'createdBy': _createdBy, 'createdAt': _createdAt?.format(), 'badge': _badge, 'meetingPoint': _meetingPoint?.toJson(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'title': _title, 'location': _location, 'description': _description, 'imageUrl': _imageUrl, 'galleryImages': _galleryImages, 'passengers': _passengers, 'season': _season, 'rating': _rating, 'category': _category, 'tags': _tags, 'plans': _plans?.map((Plan? e) => e?.toJson()).toList(), 'days': _days?.map((Day? e) => e?.toJson()).toList(), 'additionalInfo': _additionalInfo?.map((Info? e) => e?.toJson()).toList(), 'guide': _guide?.toJson(), 'schedules': _schedules?.map((Schedule? e) => e?.toJson()).toList(), 'reviews': _reviews?.map((Review? e) => e?.toJson()).toList(), 'createdBy': _createdBy, 'createdAt': _createdAt?.format(), 'badge': _badge, 'meetingPoint': _meetingPoint?.toJson(), 'country': _country, 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
@@ -533,6 +545,7 @@ class Tour extends amplify_core.Model {
     'createdAt': _createdAt,
     'badge': _badge,
     'meetingPoint': _meetingPoint,
+    'country': _country,
     'updatedAt': _updatedAt
   };
 
@@ -562,6 +575,7 @@ class Tour extends amplify_core.Model {
   static final CREATEDAT = amplify_core.QueryField(fieldName: "createdAt");
   static final BADGE = amplify_core.QueryField(fieldName: "badge");
   static final MEETINGPOINT = amplify_core.QueryField(fieldName: "meetingPoint");
+  static final COUNTRY = amplify_core.QueryField(fieldName: "country");
   static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Tour";
     modelSchemaDefinition.pluralName = "Tours";
@@ -569,6 +583,13 @@ class Tour extends amplify_core.Model {
     modelSchemaDefinition.authRules = [
       amplify_core.AuthRule(
         authStrategy: amplify_core.AuthStrategy.PUBLIC,
+        provider: amplify_core.AuthRuleProvider.IAM,
+        operations: const [
+          amplify_core.ModelOperation.READ
+        ]),
+      amplify_core.AuthRule(
+        authStrategy: amplify_core.AuthStrategy.PRIVATE,
+        provider: amplify_core.AuthRuleProvider.USERPOOLS,
         operations: const [
           amplify_core.ModelOperation.READ,
           amplify_core.ModelOperation.CREATE,
@@ -704,6 +725,12 @@ class Tour extends amplify_core.Model {
       fieldName: 'meetingPoint',
       isRequired: false,
       ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embedded, ofCustomTypeName: 'MeetingPoint')
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+      key: Tour.COUNTRY,
+      isRequired: false,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(

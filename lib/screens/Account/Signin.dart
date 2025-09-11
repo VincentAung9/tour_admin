@@ -16,7 +16,8 @@ class SignInScreen extends StatefulWidget {
   State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> with SingleTickerProviderStateMixin {
+class _SignInScreenState extends State<SignInScreen>
+    with SingleTickerProviderStateMixin {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -122,14 +123,14 @@ class _SignInScreenState extends State<SignInScreen> with SingleTickerProviderSt
 
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              backgroundColor: Colors.green,
+                backgroundColor: Colors.green,
                 content: Text('Signed in successfully!')),
           );
 
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const MainNavigation()),
-                (Route<dynamic> route) => false,
+            (Route<dynamic> route) => false,
           );
         }
       } on AuthException catch (e) {
@@ -171,7 +172,8 @@ class _SignInScreenState extends State<SignInScreen> with SingleTickerProviderSt
                   if (!popped && mounted) {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const MainNavigation()),
+                      MaterialPageRoute(
+                          builder: (context) => const MainNavigation()),
                     );
                   }
                 },
@@ -250,7 +252,8 @@ class _SignInScreenState extends State<SignInScreen> with SingleTickerProviderSt
                           animation: _iconAnimation,
                           builder: (context, child) {
                             return Transform.translate(
-                              offset: Offset(0, (1 - _iconAnimation.value) * 40),
+                              offset:
+                                  Offset(0, (1 - _iconAnimation.value) * 40),
                               child: Opacity(
                                 opacity: _iconAnimation.value,
                                 child: Container(
@@ -258,7 +261,8 @@ class _SignInScreenState extends State<SignInScreen> with SingleTickerProviderSt
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.blueAccent.withOpacity(0.2),
+                                        color:
+                                            Colors.blueAccent.withOpacity(0.2),
                                         blurRadius: 30,
                                         spreadRadius: 5,
                                       ),
@@ -297,14 +301,16 @@ class _SignInScreenState extends State<SignInScreen> with SingleTickerProviderSt
                                 ),
                                 filled: true,
                                 fillColor: Colors.white,
-                                prefixIcon: const Icon(Icons.email, color: Color(0xFF1976D2)),
+                                prefixIcon: const Icon(Icons.email,
+                                    color: Color(0xFF1976D2)),
                               ),
                               keyboardType: TextInputType.emailAddress,
                               validator: (value) {
                                 if (value == null || value.trim().isEmpty) {
                                   return 'Please enter your email';
                                 }
-                                if (!RegExp(r'^[\w\.\-]+@([\w\-]+\.)+[a-zA-Z]{2,}$')
+                                if (!RegExp(
+                                        r'^[\w\.\-]+@([\w\-]+\.)+[a-zA-Z]{2,}$')
                                     .hasMatch(value)) {
                                   return 'Enter a valid email';
                                 }
@@ -322,14 +328,18 @@ class _SignInScreenState extends State<SignInScreen> with SingleTickerProviderSt
                                 ),
                                 filled: true,
                                 fillColor: Colors.white,
-                                prefixIcon: const Icon(Icons.lock, color: Color(0xFF1976D2)),
+                                prefixIcon: const Icon(Icons.lock,
+                                    color: Color(0xFF1976D2)),
                                 suffixIcon: IconButton(
                                   icon: Icon(
-                                    _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                                    _obscurePassword
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
                                     color: const Color(0xFF1976D2),
                                   ),
                                   onPressed: () {
-                                    setState(() => _obscurePassword = !_obscurePassword);
+                                    setState(() =>
+                                        _obscurePassword = !_obscurePassword);
                                   },
                                 ),
                               ),
@@ -350,10 +360,12 @@ class _SignInScreenState extends State<SignInScreen> with SingleTickerProviderSt
                           onPressed: _isLoading
                               ? null
                               : () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Password reset not implemented')),
-                            );
-                          },
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Password reset not implemented')),
+                                  );
+                                },
                           child: const Text(
                             'Forgot Password?',
                             style: TextStyle(color: Color(0xFF1976D2)),
@@ -372,7 +384,8 @@ class _SignInScreenState extends State<SignInScreen> with SingleTickerProviderSt
                             onPressed: _isLoading ? null : _signIn,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF1976D2),
-                              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 50, vertical: 14),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
@@ -380,11 +393,13 @@ class _SignInScreenState extends State<SignInScreen> with SingleTickerProviderSt
                               shadowColor: Colors.blueAccent,
                             ),
                             child: _isLoading
-                                ? const CircularProgressIndicator(color: Colors.white)
+                                ? const CircularProgressIndicator(
+                                    color: Colors.white)
                                 : const Text(
-                              'Login',
-                              style: TextStyle(fontSize: 18, color: Colors.white),
-                            ),
+                                    'Login',
+                                    style: TextStyle(
+                                        fontSize: 18, color: Colors.white),
+                                  ),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -392,13 +407,14 @@ class _SignInScreenState extends State<SignInScreen> with SingleTickerProviderSt
                           onPressed: _isLoading
                               ? null
                               : () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const CreateAccountView(),
-                              ),
-                            );
-                          },
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CreateAccountView(),
+                                    ),
+                                  );
+                                },
                           child: const Text(
                             "Don't have an account? Sign Up",
                             style: TextStyle(color: Color(0xFF1976D2)),
@@ -416,4 +432,3 @@ class _SignInScreenState extends State<SignInScreen> with SingleTickerProviderSt
     );
   }
 }
-

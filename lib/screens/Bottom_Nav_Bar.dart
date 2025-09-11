@@ -1,14 +1,14 @@
 // main_navigation.dart
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:tour_agent_aws/Admin/TourList_to_Edit.dart';
+import 'package:tour_agent_aws/models/Country.dart';
 import '../Admin/admin_Booking_List.dart';
 import '../Admin/promo_mgmt.dart';
-import '../Admin/tour_form_screen.dart';
-import '../chat/chat_list.dart';
 import 'Account/Create_Account.dart';
 import 'Account/ProfilePage.dart';
-import 'Account/Signin.dart';
-import 'HomeScreen.dart';
-import 'My_Booking.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -21,19 +21,19 @@ class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = const [
+    //TourFormScreen(),
+    TourListScreen(),
+    AdminBookingScreen(),
 
-    // AdminBookingScreen(),
-    // TourFormScreen(),
-
-    HomeScreen(),
-    UserBookingScreen(),
-    // AdminPromoManager(),
+    /*  HomeScreen(),
+    UserBookingScreen(), */
+    AdminPromoManager(),
     ProfilePage(),
     // ChatUserListScreen(),
 
     // SignInScreen(),
 
-    // CreateAccountView(),
+    //CreateAccountView(),
   ];
 
   @override
@@ -49,9 +49,17 @@ class _MainNavigationState extends State<MainNavigation> {
             icon: Icon(Icons.home),
             label: 'Home',
           ),
+          /*  BottomNavigationBarItem(
+            icon: Icon(Icons.file_copy),
+            label: 'Home',
+          ), */
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
             label: 'Booking',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.discount),
+            label: 'Promo Code',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -63,7 +71,6 @@ class _MainNavigationState extends State<MainNavigation> {
           // ),
         ],
       ),
-
     );
   }
 }

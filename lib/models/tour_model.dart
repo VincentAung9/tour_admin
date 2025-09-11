@@ -13,6 +13,7 @@ class TourModel {
   final double rating;
   final String createdBy;
   final String createdAt;
+  final String? country;
   final List<String> tags;
   final List<Map<String, dynamic>>? plans;
   final List<Map<String, dynamic>>? days;
@@ -36,14 +37,20 @@ class TourModel {
     this.days,
     this.additionalInfo,
     this.badge,
+    this.country,
   });
 
   factory TourModel.fromJson(Map<String, dynamic> json) {
-    debugPrint('Attempting to parse Tour JSON: ${json['id']} - ${json['title']}');
-    debugPrint('Raw passengers value: ${json['passengers']} (Type: ${json['passengers']?.runtimeType})');
-    debugPrint('Raw rating value: ${json['rating']} (Type: ${json['rating']?.runtimeType})');
-    debugPrint('Raw badge value: ${json['badge']} (Type: ${json['badge']?.runtimeType})');
-    debugPrint('Raw plans value: ${json['plans']} (Type: ${json['plans']?.runtimeType})');
+    debugPrint(
+        'Attempting to parse Tour JSON: ${json['id']} - ${json['title']}');
+    debugPrint(
+        'Raw passengers value: ${json['passengers']} (Type: ${json['passengers']?.runtimeType})');
+    debugPrint(
+        'Raw rating value: ${json['rating']} (Type: ${json['rating']?.runtimeType})');
+    debugPrint(
+        'Raw badge value: ${json['badge']} (Type: ${json['badge']?.runtimeType})');
+    debugPrint(
+        'Raw plans value: ${json['plans']} (Type: ${json['plans']?.runtimeType})');
 
     final String title = json['title'] as String;
     final String location = json['location'] as String;
@@ -54,6 +61,7 @@ class TourModel {
     final String category = json['category'] as String;
     final String createdBy = json['createdBy'] as String;
     final String createdAt = json['createdAt'] as String;
+    final String? country = json['country'] as String?;
 
     double parsedRating;
     if (json['rating'] is double) {
@@ -119,6 +127,29 @@ class TourModel {
       days: parsedDays,
       additionalInfo: parsedAdditionalInfo,
       badge: json['badge'] as String?,
+      country: country,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'location': location,
+      'description': description,
+      'imageUrl': imageUrl,
+      'passengers': passengers,
+      'season': season,
+      'category': category,
+      'rating': rating,
+      'createdBy': createdBy,
+      'createdAt': createdAt,
+      'tags': tags,
+      'plans': plans,
+      'days': days,
+      'additionalInfo': additionalInfo,
+      'badge': badge,
+      'country': country,
+    };
   }
 }
