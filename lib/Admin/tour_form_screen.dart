@@ -18,6 +18,7 @@ class _TourFormScreenState extends State<TourFormScreen> {
   final _locationController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _imageUrlController = TextEditingController();
+  final _videoUrlController = TextEditingController();
   final _passengerController = TextEditingController();
   final _tagsController = TextEditingController();
 
@@ -131,6 +132,8 @@ class _TourFormScreenState extends State<TourFormScreen> {
         'location': _locationController.text.trim(),
         'description': _descriptionController.text.trim(),
         'imageUrl': _imageUrlController.text.trim(),
+        'videoUrl':
+            _videoUrlController.text.isEmpty ? null : _videoUrlController.text,
         'passengers': _passengerController.text.trim(),
         'country': _selectedCountry,
         'season': _selectedSeason,
@@ -166,6 +169,7 @@ class _TourFormScreenState extends State<TourFormScreen> {
     _locationController.clear();
     _descriptionController.clear();
     _imageUrlController.clear();
+    _videoUrlController.clear();
     _passengerController.clear();
     _tagsController.clear();
     _tags.clear();
@@ -272,6 +276,10 @@ class _TourFormScreenState extends State<TourFormScreen> {
                   controller: _imageUrlController,
                   label: "Image URL",
                   icon: Icons.image),
+              _buildTextField(
+                  controller: _videoUrlController,
+                  label: "Video URL",
+                  icon: Icons.videocam),
               _buildTextField(
                   controller: _passengerController,
                   label: "Passengers",

@@ -19,6 +19,7 @@ class _TourEditScreenState extends State<TourEditScreen> {
   final _locationController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _imageUrlController = TextEditingController();
+  final _videoUrlController = TextEditingController();
   final _passengerController = TextEditingController();
   final _tagsController = TextEditingController();
 
@@ -60,6 +61,7 @@ class _TourEditScreenState extends State<TourEditScreen> {
     _locationController.text = widget.tourData['location'] ?? '';
     _descriptionController.text = widget.tourData['description'] ?? '';
     _imageUrlController.text = widget.tourData['imageUrl'] ?? '';
+    _videoUrlController.text = widget.tourData["videoUrl"] ?? "";
     _passengerController.text = widget.tourData['passengers'] ?? '';
 
     final incomingCategory = widget.tourData['category'];
@@ -157,6 +159,8 @@ class _TourEditScreenState extends State<TourEditScreen> {
         'location': _locationController.text.trim(),
         'description': _descriptionController.text.trim(),
         'imageUrl': _imageUrlController.text.trim(),
+        'videoUrl':
+            _videoUrlController.text.isEmpty ? null : _videoUrlController.text,
         'passengers': _passengerController.text.trim(),
         'country': _selectedCountry,
         'season': _selectedSeason,
@@ -283,6 +287,10 @@ class _TourEditScreenState extends State<TourEditScreen> {
               _buildTextField(
                   controller: _imageUrlController,
                   label: "Image URL",
+                  icon: Icons.image),
+              _buildTextField(
+                  controller: _videoUrlController,
+                  label: "Video URL",
                   icon: Icons.image),
               _buildTextField(
                   controller: _passengerController,
