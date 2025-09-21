@@ -28,6 +28,7 @@ Future<void> createTour(Map<String, dynamic> tourData) async {
           'category': tourData['category'],
           'tags': tourData['tags'],
           'plans': tourData['plans'],
+          'badge': tourData['tags'],
           'days': tourData['days'],
           'additionalInfo': tourData['additionalInfo'],
           'createdBy': tourData['createdBy'],
