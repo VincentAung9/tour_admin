@@ -46,6 +46,7 @@ class _TourListScreenState extends State<TourListScreen> {
                 location
                 description
                 imageUrl
+                videoUrl
                 passengers
                 country
                 season
@@ -80,12 +81,12 @@ class _TourListScreenState extends State<TourListScreen> {
 
       final response = await Amplify.API.query(request: request).response;
 
-      if (response.errors.isNotEmpty) {
+      /*   if (response.errors.isNotEmpty) {
         print('Amplify API Errors: ${response.errors}');
         print('Amplify API Data (on error): ${response.data}');
         throw Exception(
             'Failed to fetch tours: ${response.errors.first.message}');
-      }
+      } */
 
       final data = response.data;
       if (data != null) {

@@ -49,6 +49,7 @@ type Tour
   location: String!
   description: String!
   imageUrl: String!
+  videoUrl: String
   galleryImages: [String!]
   passengers: String!
   season: String!

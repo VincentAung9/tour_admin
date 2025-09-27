@@ -23,7 +23,6 @@ import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 import 'package:collection/collection.dart';
 
-
 /** This is an auto generated class representing the Tour type in your schema. */
 class Tour extends amplify_core.Model {
   static const classType = const _TourModelType();
@@ -32,6 +31,7 @@ class Tour extends amplify_core.Model {
   final String? _location;
   final String? _description;
   final String? _imageUrl;
+  final String? _videoUrl;
   final List<String>? _galleryImages;
   final String? _passengers;
   final String? _season;
@@ -53,509 +53,675 @@ class Tour extends amplify_core.Model {
 
   @override
   getInstanceType() => classType;
-  
-  @Deprecated('[getId] is being deprecated in favor of custom primary key feature. Use getter [modelIdentifier] to get model identifier.')
+
+  @Deprecated(
+      '[getId] is being deprecated in favor of custom primary key feature. Use getter [modelIdentifier] to get model identifier.')
   @override
   String getId() => id;
-  
+
   TourModelIdentifier get modelIdentifier {
-      return TourModelIdentifier(
-        id: id
-      );
+    return TourModelIdentifier(id: id);
   }
-  
+
   String get title {
     try {
       return _title!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   String get location {
     try {
       return _location!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   String get description {
     try {
       return _description!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   String get imageUrl {
     try {
       return _imageUrl!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
+  String? get videoUrl {
+    return _videoUrl;
+  }
+
   List<String>? get galleryImages {
     return _galleryImages;
   }
-  
+
   String get passengers {
     try {
       return _passengers!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   String get season {
     try {
       return _season!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   double get rating {
     try {
       return _rating!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   String get category {
     try {
       return _category!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   List<String> get tags {
     try {
       return _tags!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   List<Plan> get plans {
     try {
       return _plans!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   List<Day> get days {
     try {
       return _days!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   List<Info>? get additionalInfo {
     return _additionalInfo;
   }
-  
+
   TourGuide? get guide {
     return _guide;
   }
-  
+
   List<Schedule>? get schedules {
     return _schedules;
   }
-  
+
   List<Review>? get reviews {
     return _reviews;
   }
-  
+
   String get createdBy {
     try {
       return _createdBy!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   amplify_core.TemporalDateTime get createdAt {
     try {
       return _createdAt!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   String get badge {
     try {
       return _badge!;
-    } catch(e) {
+    } catch (e) {
       throw amplify_core.AmplifyCodeGenModelException(
-          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: amplify_core.AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   MeetingPoint? get meetingPoint {
     return _meetingPoint;
   }
-  
+
   String? get country {
     return _country;
   }
-  
+
   amplify_core.TemporalDateTime? get updatedAt {
     return _updatedAt;
   }
-  
-  const Tour._internal({required this.id, required title, required location, required description, required imageUrl, galleryImages, required passengers, required season, required rating, required category, required tags, required plans, required days, additionalInfo, guide, schedules, reviews, required createdBy, required createdAt, required badge, meetingPoint, country, updatedAt}): _title = title, _location = location, _description = description, _imageUrl = imageUrl, _galleryImages = galleryImages, _passengers = passengers, _season = season, _rating = rating, _category = category, _tags = tags, _plans = plans, _days = days, _additionalInfo = additionalInfo, _guide = guide, _schedules = schedules, _reviews = reviews, _createdBy = createdBy, _createdAt = createdAt, _badge = badge, _meetingPoint = meetingPoint, _country = country, _updatedAt = updatedAt;
-  
-  factory Tour({String? id, required String title, required String location, required String description, required String imageUrl, List<String>? galleryImages, required String passengers, required String season, required double rating, required String category, required List<String> tags, required List<Plan> plans, required List<Day> days, List<Info>? additionalInfo, TourGuide? guide, List<Schedule>? schedules, List<Review>? reviews, required String createdBy, required amplify_core.TemporalDateTime createdAt, required String badge, MeetingPoint? meetingPoint, String? country}) {
+
+  const Tour._internal(
+      {required this.id,
+      required title,
+      required location,
+      required description,
+      required imageUrl,
+      videoUrl,
+      galleryImages,
+      required passengers,
+      required season,
+      required rating,
+      required category,
+      required tags,
+      required plans,
+      required days,
+      additionalInfo,
+      guide,
+      schedules,
+      reviews,
+      required createdBy,
+      required createdAt,
+      required badge,
+      meetingPoint,
+      country,
+      updatedAt})
+      : _title = title,
+        _location = location,
+        _description = description,
+        _imageUrl = imageUrl,
+        _videoUrl = videoUrl,
+        _galleryImages = galleryImages,
+        _passengers = passengers,
+        _season = season,
+        _rating = rating,
+        _category = category,
+        _tags = tags,
+        _plans = plans,
+        _days = days,
+        _additionalInfo = additionalInfo,
+        _guide = guide,
+        _schedules = schedules,
+        _reviews = reviews,
+        _createdBy = createdBy,
+        _createdAt = createdAt,
+        _badge = badge,
+        _meetingPoint = meetingPoint,
+        _country = country,
+        _updatedAt = updatedAt;
+
+  factory Tour(
+      {String? id,
+      required String title,
+      required String location,
+      required String description,
+      required String imageUrl,
+      String? videoUrl,
+      List<String>? galleryImages,
+      required String passengers,
+      required String season,
+      required double rating,
+      required String category,
+      required List<String> tags,
+      required List<Plan> plans,
+      required List<Day> days,
+      List<Info>? additionalInfo,
+      TourGuide? guide,
+      List<Schedule>? schedules,
+      List<Review>? reviews,
+      required String createdBy,
+      required amplify_core.TemporalDateTime createdAt,
+      required String badge,
+      MeetingPoint? meetingPoint,
+      String? country}) {
     return Tour._internal(
-      id: id == null ? amplify_core.UUID.getUUID() : id,
-      title: title,
-      location: location,
-      description: description,
-      imageUrl: imageUrl,
-      galleryImages: galleryImages != null ? List<String>.unmodifiable(galleryImages) : galleryImages,
-      passengers: passengers,
-      season: season,
-      rating: rating,
-      category: category,
-      tags: tags != null ? List<String>.unmodifiable(tags) : tags,
-      plans: plans != null ? List<Plan>.unmodifiable(plans) : plans,
-      days: days != null ? List<Day>.unmodifiable(days) : days,
-      additionalInfo: additionalInfo != null ? List<Info>.unmodifiable(additionalInfo) : additionalInfo,
-      guide: guide,
-      schedules: schedules != null ? List<Schedule>.unmodifiable(schedules) : schedules,
-      reviews: reviews != null ? List<Review>.unmodifiable(reviews) : reviews,
-      createdBy: createdBy,
-      createdAt: createdAt,
-      badge: badge,
-      meetingPoint: meetingPoint,
-      country: country);
+        id: id == null ? amplify_core.UUID.getUUID() : id,
+        title: title,
+        location: location,
+        description: description,
+        imageUrl: imageUrl,
+        videoUrl: videoUrl,
+        galleryImages: galleryImages != null
+            ? List<String>.unmodifiable(galleryImages)
+            : galleryImages,
+        passengers: passengers,
+        season: season,
+        rating: rating,
+        category: category,
+        tags: tags != null ? List<String>.unmodifiable(tags) : tags,
+        plans: plans != null ? List<Plan>.unmodifiable(plans) : plans,
+        days: days != null ? List<Day>.unmodifiable(days) : days,
+        additionalInfo: additionalInfo != null
+            ? List<Info>.unmodifiable(additionalInfo)
+            : additionalInfo,
+        guide: guide,
+        schedules: schedules != null
+            ? List<Schedule>.unmodifiable(schedules)
+            : schedules,
+        reviews: reviews != null ? List<Review>.unmodifiable(reviews) : reviews,
+        createdBy: createdBy,
+        createdAt: createdAt,
+        badge: badge,
+        meetingPoint: meetingPoint,
+        country: country);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is Tour &&
-      id == other.id &&
-      _title == other._title &&
-      _location == other._location &&
-      _description == other._description &&
-      _imageUrl == other._imageUrl &&
-      DeepCollectionEquality().equals(_galleryImages, other._galleryImages) &&
-      _passengers == other._passengers &&
-      _season == other._season &&
-      _rating == other._rating &&
-      _category == other._category &&
-      DeepCollectionEquality().equals(_tags, other._tags) &&
-      DeepCollectionEquality().equals(_plans, other._plans) &&
-      DeepCollectionEquality().equals(_days, other._days) &&
-      DeepCollectionEquality().equals(_additionalInfo, other._additionalInfo) &&
-      _guide == other._guide &&
-      DeepCollectionEquality().equals(_schedules, other._schedules) &&
-      DeepCollectionEquality().equals(_reviews, other._reviews) &&
-      _createdBy == other._createdBy &&
-      _createdAt == other._createdAt &&
-      _badge == other._badge &&
-      _meetingPoint == other._meetingPoint &&
-      _country == other._country;
+        id == other.id &&
+        _title == other._title &&
+        _location == other._location &&
+        _description == other._description &&
+        _imageUrl == other._imageUrl &&
+        _videoUrl == other._videoUrl &&
+        DeepCollectionEquality().equals(_galleryImages, other._galleryImages) &&
+        _passengers == other._passengers &&
+        _season == other._season &&
+        _rating == other._rating &&
+        _category == other._category &&
+        DeepCollectionEquality().equals(_tags, other._tags) &&
+        DeepCollectionEquality().equals(_plans, other._plans) &&
+        DeepCollectionEquality().equals(_days, other._days) &&
+        DeepCollectionEquality()
+            .equals(_additionalInfo, other._additionalInfo) &&
+        _guide == other._guide &&
+        DeepCollectionEquality().equals(_schedules, other._schedules) &&
+        DeepCollectionEquality().equals(_reviews, other._reviews) &&
+        _createdBy == other._createdBy &&
+        _createdAt == other._createdAt &&
+        _badge == other._badge &&
+        _meetingPoint == other._meetingPoint &&
+        _country == other._country;
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("Tour {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("title=" + "$_title" + ", ");
     buffer.write("location=" + "$_location" + ", ");
     buffer.write("description=" + "$_description" + ", ");
     buffer.write("imageUrl=" + "$_imageUrl" + ", ");
-    buffer.write("galleryImages=" + (_galleryImages != null ? _galleryImages!.toString() : "null") + ", ");
+    buffer.write("videoUrl=" + "$_videoUrl" + ", ");
+    buffer.write("galleryImages=" +
+        (_galleryImages != null ? _galleryImages!.toString() : "null") +
+        ", ");
     buffer.write("passengers=" + "$_passengers" + ", ");
     buffer.write("season=" + "$_season" + ", ");
-    buffer.write("rating=" + (_rating != null ? _rating!.toString() : "null") + ", ");
+    buffer.write(
+        "rating=" + (_rating != null ? _rating!.toString() : "null") + ", ");
     buffer.write("category=" + "$_category" + ", ");
     buffer.write("tags=" + (_tags != null ? _tags!.toString() : "null") + ", ");
-    buffer.write("plans=" + (_plans != null ? _plans!.toString() : "null") + ", ");
+    buffer.write(
+        "plans=" + (_plans != null ? _plans!.toString() : "null") + ", ");
     buffer.write("days=" + (_days != null ? _days!.toString() : "null") + ", ");
-    buffer.write("additionalInfo=" + (_additionalInfo != null ? _additionalInfo!.toString() : "null") + ", ");
-    buffer.write("guide=" + (_guide != null ? _guide!.toString() : "null") + ", ");
+    buffer.write("additionalInfo=" +
+        (_additionalInfo != null ? _additionalInfo!.toString() : "null") +
+        ", ");
+    buffer.write(
+        "guide=" + (_guide != null ? _guide!.toString() : "null") + ", ");
     buffer.write("createdBy=" + "$_createdBy" + ", ");
-    buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
+    buffer.write("createdAt=" +
+        (_createdAt != null ? _createdAt!.format() : "null") +
+        ", ");
     buffer.write("badge=" + "$_badge" + ", ");
-    buffer.write("meetingPoint=" + (_meetingPoint != null ? _meetingPoint!.toString() : "null") + ", ");
+    buffer.write("meetingPoint=" +
+        (_meetingPoint != null ? _meetingPoint!.toString() : "null") +
+        ", ");
     buffer.write("country=" + "$_country" + ", ");
-    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
+    buffer.write(
+        "updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
-  Tour copyWith({String? title, String? location, String? description, String? imageUrl, List<String>? galleryImages, String? passengers, String? season, double? rating, String? category, List<String>? tags, List<Plan>? plans, List<Day>? days, List<Info>? additionalInfo, TourGuide? guide, List<Schedule>? schedules, List<Review>? reviews, String? createdBy, amplify_core.TemporalDateTime? createdAt, String? badge, MeetingPoint? meetingPoint, String? country}) {
-    return Tour._internal(
-      id: id,
-      title: title ?? this.title,
-      location: location ?? this.location,
-      description: description ?? this.description,
-      imageUrl: imageUrl ?? this.imageUrl,
-      galleryImages: galleryImages ?? this.galleryImages,
-      passengers: passengers ?? this.passengers,
-      season: season ?? this.season,
-      rating: rating ?? this.rating,
-      category: category ?? this.category,
-      tags: tags ?? this.tags,
-      plans: plans ?? this.plans,
-      days: days ?? this.days,
-      additionalInfo: additionalInfo ?? this.additionalInfo,
-      guide: guide ?? this.guide,
-      schedules: schedules ?? this.schedules,
-      reviews: reviews ?? this.reviews,
-      createdBy: createdBy ?? this.createdBy,
-      createdAt: createdAt ?? this.createdAt,
-      badge: badge ?? this.badge,
-      meetingPoint: meetingPoint ?? this.meetingPoint,
-      country: country ?? this.country);
-  }
-  
-  Tour copyWithModelFieldValues({
-    ModelFieldValue<String>? title,
-    ModelFieldValue<String>? location,
-    ModelFieldValue<String>? description,
-    ModelFieldValue<String>? imageUrl,
-    ModelFieldValue<List<String>>? galleryImages,
-    ModelFieldValue<String>? passengers,
-    ModelFieldValue<String>? season,
-    ModelFieldValue<double>? rating,
-    ModelFieldValue<String>? category,
-    ModelFieldValue<List<String>>? tags,
-    ModelFieldValue<List<Plan>>? plans,
-    ModelFieldValue<List<Day>>? days,
-    ModelFieldValue<List<Info>>? additionalInfo,
-    ModelFieldValue<TourGuide?>? guide,
-    ModelFieldValue<List<Schedule>?>? schedules,
-    ModelFieldValue<List<Review>?>? reviews,
-    ModelFieldValue<String>? createdBy,
-    ModelFieldValue<amplify_core.TemporalDateTime>? createdAt,
-    ModelFieldValue<String>? badge,
-    ModelFieldValue<MeetingPoint?>? meetingPoint,
-    ModelFieldValue<String?>? country
-  }) {
-    return Tour._internal(
-      id: id,
-      title: title == null ? this.title : title.value,
-      location: location == null ? this.location : location.value,
-      description: description == null ? this.description : description.value,
-      imageUrl: imageUrl == null ? this.imageUrl : imageUrl.value,
-      galleryImages: galleryImages == null ? this.galleryImages : galleryImages.value,
-      passengers: passengers == null ? this.passengers : passengers.value,
-      season: season == null ? this.season : season.value,
-      rating: rating == null ? this.rating : rating.value,
-      category: category == null ? this.category : category.value,
-      tags: tags == null ? this.tags : tags.value,
-      plans: plans == null ? this.plans : plans.value,
-      days: days == null ? this.days : days.value,
-      additionalInfo: additionalInfo == null ? this.additionalInfo : additionalInfo.value,
-      guide: guide == null ? this.guide : guide.value,
-      schedules: schedules == null ? this.schedules : schedules.value,
-      reviews: reviews == null ? this.reviews : reviews.value,
-      createdBy: createdBy == null ? this.createdBy : createdBy.value,
-      createdAt: createdAt == null ? this.createdAt : createdAt.value,
-      badge: badge == null ? this.badge : badge.value,
-      meetingPoint: meetingPoint == null ? this.meetingPoint : meetingPoint.value,
-      country: country == null ? this.country : country.value
-    );
-  }
-  
-  Tour.fromJson(Map<String, dynamic> json)  
-    : id = json['id'],
-      _title = json['title'],
-      _location = json['location'],
-      _description = json['description'],
-      _imageUrl = json['imageUrl'],
-      _galleryImages = json['galleryImages']?.cast<String>(),
-      _passengers = json['passengers'],
-      _season = json['season'],
-      _rating = (json['rating'] as num?)?.toDouble(),
-      _category = json['category'],
-      _tags = json['tags']?.cast<String>(),
-      _plans = json['plans'] is List
-        ? (json['plans'] as List)
-          .where((e) => e != null)
-          .map((e) => Plan.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
-          .toList()
-        : null,
-      _days = json['days'] is List
-        ? (json['days'] as List)
-          .where((e) => e != null)
-          .map((e) => Day.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
-          .toList()
-        : null,
-      _additionalInfo = json['additionalInfo'] is List
-        ? (json['additionalInfo'] as List)
-          .where((e) => e != null)
-          .map((e) => Info.fromJson(new Map<String, dynamic>.from(e['serializedData'] ?? e)))
-          .toList()
-        : null,
-      _guide = json['guide'] != null
-          ? json['guide']['serializedData'] != null
-              ? TourGuide.fromJson(new Map<String, dynamic>.from(json['guide']['serializedData']))
-              : TourGuide.fromJson(new Map<String, dynamic>.from(json['guide']))
-        : null,
-      _schedules = json['schedules']  is Map
-        ? (json['schedules']['items'] is List
-          ? (json['schedules']['items'] as List)
-              .where((e) => e != null)
-              .map((e) => Schedule.fromJson(new Map<String, dynamic>.from(e)))
-              .toList()
-          : null)
-        : (json['schedules'] is List
-          ? (json['schedules'] as List)
-              .where((e) => e?['serializedData'] != null)
-              .map((e) => Schedule.fromJson(new Map<String, dynamic>.from(e?['serializedData'])))
-              .toList()
-          : null),
-      _reviews = json['reviews']  is Map
-        ? (json['reviews']['items'] is List
-          ? (json['reviews']['items'] as List)
-              .where((e) => e != null)
-              .map((e) => Review.fromJson(new Map<String, dynamic>.from(e)))
-              .toList()
-          : null)
-        : (json['reviews'] is List
-          ? (json['reviews'] as List)
-              .where((e) => e?['serializedData'] != null)
-              .map((e) => Review.fromJson(new Map<String, dynamic>.from(e?['serializedData'])))
-              .toList()
-          : null),
-      _createdBy = json['createdBy'],
-      _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null,
-      _badge = json['badge'],
-      _meetingPoint = json['meetingPoint'] != null
-          ? json['meetingPoint']['serializedData'] != null
-              ? MeetingPoint.fromJson(new Map<String, dynamic>.from(json['meetingPoint']['serializedData']))
-              : MeetingPoint.fromJson(new Map<String, dynamic>.from(json['meetingPoint']))
-        : null,
-      _country = json['country'],
-      _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null;
-  
-  Map<String, dynamic> toJson() => {
-    'id': id, 'title': _title, 'location': _location, 'description': _description, 'imageUrl': _imageUrl, 'galleryImages': _galleryImages, 'passengers': _passengers, 'season': _season, 'rating': _rating, 'category': _category, 'tags': _tags, 'plans': _plans?.map((Plan? e) => e?.toJson()).toList(), 'days': _days?.map((Day? e) => e?.toJson()).toList(), 'additionalInfo': _additionalInfo?.map((Info? e) => e?.toJson()).toList(), 'guide': _guide?.toJson(), 'schedules': _schedules?.map((Schedule? e) => e?.toJson()).toList(), 'reviews': _reviews?.map((Review? e) => e?.toJson()).toList(), 'createdBy': _createdBy, 'createdAt': _createdAt?.format(), 'badge': _badge, 'meetingPoint': _meetingPoint?.toJson(), 'country': _country, 'updatedAt': _updatedAt?.format()
-  };
-  
-  Map<String, Object?> toMap() => {
-    'id': id,
-    'title': _title,
-    'location': _location,
-    'description': _description,
-    'imageUrl': _imageUrl,
-    'galleryImages': _galleryImages,
-    'passengers': _passengers,
-    'season': _season,
-    'rating': _rating,
-    'category': _category,
-    'tags': _tags,
-    'plans': _plans,
-    'days': _days,
-    'additionalInfo': _additionalInfo,
-    'guide': _guide,
-    'schedules': _schedules,
-    'reviews': _reviews,
-    'createdBy': _createdBy,
-    'createdAt': _createdAt,
-    'badge': _badge,
-    'meetingPoint': _meetingPoint,
-    'country': _country,
-    'updatedAt': _updatedAt
-  };
 
-  static final amplify_core.QueryModelIdentifier<TourModelIdentifier> MODEL_IDENTIFIER = amplify_core.QueryModelIdentifier<TourModelIdentifier>();
+  Tour copyWith(
+      {String? title,
+      String? location,
+      String? description,
+      String? imageUrl,
+      String? videoUrl,
+      List<String>? galleryImages,
+      String? passengers,
+      String? season,
+      double? rating,
+      String? category,
+      List<String>? tags,
+      List<Plan>? plans,
+      List<Day>? days,
+      List<Info>? additionalInfo,
+      TourGuide? guide,
+      List<Schedule>? schedules,
+      List<Review>? reviews,
+      String? createdBy,
+      amplify_core.TemporalDateTime? createdAt,
+      String? badge,
+      MeetingPoint? meetingPoint,
+      String? country}) {
+    return Tour._internal(
+        id: id,
+        title: title ?? this.title,
+        location: location ?? this.location,
+        description: description ?? this.description,
+        imageUrl: imageUrl ?? this.imageUrl,
+        videoUrl: videoUrl ?? this.videoUrl,
+        galleryImages: galleryImages ?? this.galleryImages,
+        passengers: passengers ?? this.passengers,
+        season: season ?? this.season,
+        rating: rating ?? this.rating,
+        category: category ?? this.category,
+        tags: tags ?? this.tags,
+        plans: plans ?? this.plans,
+        days: days ?? this.days,
+        additionalInfo: additionalInfo ?? this.additionalInfo,
+        guide: guide ?? this.guide,
+        schedules: schedules ?? this.schedules,
+        reviews: reviews ?? this.reviews,
+        createdBy: createdBy ?? this.createdBy,
+        createdAt: createdAt ?? this.createdAt,
+        badge: badge ?? this.badge,
+        meetingPoint: meetingPoint ?? this.meetingPoint,
+        country: country ?? this.country);
+  }
+
+  Tour copyWithModelFieldValues(
+      {ModelFieldValue<String>? title,
+      ModelFieldValue<String>? location,
+      ModelFieldValue<String>? description,
+      ModelFieldValue<String>? imageUrl,
+      ModelFieldValue<String?>? videoUrl,
+      ModelFieldValue<List<String>>? galleryImages,
+      ModelFieldValue<String>? passengers,
+      ModelFieldValue<String>? season,
+      ModelFieldValue<double>? rating,
+      ModelFieldValue<String>? category,
+      ModelFieldValue<List<String>>? tags,
+      ModelFieldValue<List<Plan>>? plans,
+      ModelFieldValue<List<Day>>? days,
+      ModelFieldValue<List<Info>>? additionalInfo,
+      ModelFieldValue<TourGuide?>? guide,
+      ModelFieldValue<List<Schedule>?>? schedules,
+      ModelFieldValue<List<Review>?>? reviews,
+      ModelFieldValue<String>? createdBy,
+      ModelFieldValue<amplify_core.TemporalDateTime>? createdAt,
+      ModelFieldValue<String>? badge,
+      ModelFieldValue<MeetingPoint?>? meetingPoint,
+      ModelFieldValue<String?>? country}) {
+    return Tour._internal(
+        id: id,
+        title: title == null ? this.title : title.value,
+        location: location == null ? this.location : location.value,
+        description: description == null ? this.description : description.value,
+        imageUrl: imageUrl == null ? this.imageUrl : imageUrl.value,
+        videoUrl: videoUrl == null ? this.videoUrl : videoUrl.value,
+        galleryImages:
+            galleryImages == null ? this.galleryImages : galleryImages.value,
+        passengers: passengers == null ? this.passengers : passengers.value,
+        season: season == null ? this.season : season.value,
+        rating: rating == null ? this.rating : rating.value,
+        category: category == null ? this.category : category.value,
+        tags: tags == null ? this.tags : tags.value,
+        plans: plans == null ? this.plans : plans.value,
+        days: days == null ? this.days : days.value,
+        additionalInfo:
+            additionalInfo == null ? this.additionalInfo : additionalInfo.value,
+        guide: guide == null ? this.guide : guide.value,
+        schedules: schedules == null ? this.schedules : schedules.value,
+        reviews: reviews == null ? this.reviews : reviews.value,
+        createdBy: createdBy == null ? this.createdBy : createdBy.value,
+        createdAt: createdAt == null ? this.createdAt : createdAt.value,
+        badge: badge == null ? this.badge : badge.value,
+        meetingPoint:
+            meetingPoint == null ? this.meetingPoint : meetingPoint.value,
+        country: country == null ? this.country : country.value);
+  }
+
+  Tour.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        _title = json['title'],
+        _location = json['location'],
+        _description = json['description'],
+        _imageUrl = json['imageUrl'],
+        _videoUrl = json['videoUrl'],
+        _galleryImages = json['galleryImages']?.cast<String>(),
+        _passengers = json['passengers'],
+        _season = json['season'],
+        _rating = (json['rating'] as num?)?.toDouble(),
+        _category = json['category'],
+        _tags = json['tags']?.cast<String>(),
+        _plans = json['plans'] is List
+            ? (json['plans'] as List)
+                .where((e) => e != null)
+                .map((e) => Plan.fromJson(
+                    new Map<String, dynamic>.from(e['serializedData'] ?? e)))
+                .toList()
+            : null,
+        _days = json['days'] is List
+            ? (json['days'] as List)
+                .where((e) => e != null)
+                .map((e) => Day.fromJson(
+                    new Map<String, dynamic>.from(e['serializedData'] ?? e)))
+                .toList()
+            : null,
+        _additionalInfo = json['additionalInfo'] is List
+            ? (json['additionalInfo'] as List)
+                .where((e) => e != null)
+                .map((e) => Info.fromJson(
+                    new Map<String, dynamic>.from(e['serializedData'] ?? e)))
+                .toList()
+            : null,
+        _guide = json['guide'] != null
+            ? json['guide']['serializedData'] != null
+                ? TourGuide.fromJson(new Map<String, dynamic>.from(
+                    json['guide']['serializedData']))
+                : TourGuide.fromJson(
+                    new Map<String, dynamic>.from(json['guide']))
+            : null,
+        _schedules = json['schedules'] is Map
+            ? (json['schedules']['items'] is List
+                ? (json['schedules']['items'] as List)
+                    .where((e) => e != null)
+                    .map((e) =>
+                        Schedule.fromJson(new Map<String, dynamic>.from(e)))
+                    .toList()
+                : null)
+            : (json['schedules'] is List
+                ? (json['schedules'] as List)
+                    .where((e) => e?['serializedData'] != null)
+                    .map((e) => Schedule.fromJson(
+                        new Map<String, dynamic>.from(e?['serializedData'])))
+                    .toList()
+                : null),
+        _reviews = json['reviews'] is Map
+            ? (json['reviews']['items'] is List
+                ? (json['reviews']['items'] as List)
+                    .where((e) => e != null)
+                    .map((e) =>
+                        Review.fromJson(new Map<String, dynamic>.from(e)))
+                    .toList()
+                : null)
+            : (json['reviews'] is List
+                ? (json['reviews'] as List)
+                    .where((e) => e?['serializedData'] != null)
+                    .map((e) => Review.fromJson(
+                        new Map<String, dynamic>.from(e?['serializedData'])))
+                    .toList()
+                : null),
+        _createdBy = json['createdBy'],
+        _createdAt = json['createdAt'] != null
+            ? amplify_core.TemporalDateTime.fromString(json['createdAt'])
+            : null,
+        _badge = json['badge'],
+        _meetingPoint = json['meetingPoint'] != null
+            ? json['meetingPoint']['serializedData'] != null
+                ? MeetingPoint.fromJson(new Map<String, dynamic>.from(
+                    json['meetingPoint']['serializedData']))
+                : MeetingPoint.fromJson(
+                    new Map<String, dynamic>.from(json['meetingPoint']))
+            : null,
+        _country = json['country'],
+        _updatedAt = json['updatedAt'] != null
+            ? amplify_core.TemporalDateTime.fromString(json['updatedAt'])
+            : null;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': _title,
+        'location': _location,
+        'description': _description,
+        'imageUrl': _imageUrl,
+        'videoUrl': _videoUrl,
+        'galleryImages': _galleryImages,
+        'passengers': _passengers,
+        'season': _season,
+        'rating': _rating,
+        'category': _category,
+        'tags': _tags,
+        'plans': _plans?.map((Plan? e) => e?.toJson()).toList(),
+        'days': _days?.map((Day? e) => e?.toJson()).toList(),
+        'additionalInfo':
+            _additionalInfo?.map((Info? e) => e?.toJson()).toList(),
+        'guide': _guide?.toJson(),
+        'schedules': _schedules?.map((Schedule? e) => e?.toJson()).toList(),
+        'reviews': _reviews?.map((Review? e) => e?.toJson()).toList(),
+        'createdBy': _createdBy,
+        'createdAt': _createdAt?.format(),
+        'badge': _badge,
+        'meetingPoint': _meetingPoint?.toJson(),
+        'country': _country,
+        'updatedAt': _updatedAt?.format()
+      };
+
+  Map<String, Object?> toMap() => {
+        'id': id,
+        'title': _title,
+        'location': _location,
+        'description': _description,
+        'imageUrl': _imageUrl,
+        'videoUrl': _videoUrl,
+        'galleryImages': _galleryImages,
+        'passengers': _passengers,
+        'season': _season,
+        'rating': _rating,
+        'category': _category,
+        'tags': _tags,
+        'plans': _plans,
+        'days': _days,
+        'additionalInfo': _additionalInfo,
+        'guide': _guide,
+        'schedules': _schedules,
+        'reviews': _reviews,
+        'createdBy': _createdBy,
+        'createdAt': _createdAt,
+        'badge': _badge,
+        'meetingPoint': _meetingPoint,
+        'country': _country,
+        'updatedAt': _updatedAt
+      };
+
+  static final amplify_core.QueryModelIdentifier<TourModelIdentifier>
+      MODEL_IDENTIFIER =
+      amplify_core.QueryModelIdentifier<TourModelIdentifier>();
   static final ID = amplify_core.QueryField(fieldName: "id");
   static final TITLE = amplify_core.QueryField(fieldName: "title");
   static final LOCATION = amplify_core.QueryField(fieldName: "location");
   static final DESCRIPTION = amplify_core.QueryField(fieldName: "description");
   static final IMAGEURL = amplify_core.QueryField(fieldName: "imageUrl");
-  static final GALLERYIMAGES = amplify_core.QueryField(fieldName: "galleryImages");
+  static final VIDEOURL = amplify_core.QueryField(fieldName: "videoUrl");
+  static final GALLERYIMAGES =
+      amplify_core.QueryField(fieldName: "galleryImages");
   static final PASSENGERS = amplify_core.QueryField(fieldName: "passengers");
   static final SEASON = amplify_core.QueryField(fieldName: "season");
   static final RATING = amplify_core.QueryField(fieldName: "rating");
@@ -563,193 +729,210 @@ class Tour extends amplify_core.Model {
   static final TAGS = amplify_core.QueryField(fieldName: "tags");
   static final PLANS = amplify_core.QueryField(fieldName: "plans");
   static final DAYS = amplify_core.QueryField(fieldName: "days");
-  static final ADDITIONALINFO = amplify_core.QueryField(fieldName: "additionalInfo");
+  static final ADDITIONALINFO =
+      amplify_core.QueryField(fieldName: "additionalInfo");
   static final GUIDE = amplify_core.QueryField(fieldName: "guide");
   static final SCHEDULES = amplify_core.QueryField(
-    fieldName: "schedules",
-    fieldType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.model, ofModelName: 'Schedule'));
+      fieldName: "schedules",
+      fieldType: amplify_core.ModelFieldType(
+          amplify_core.ModelFieldTypeEnum.model,
+          ofModelName: 'Schedule'));
   static final REVIEWS = amplify_core.QueryField(
-    fieldName: "reviews",
-    fieldType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.model, ofModelName: 'Review'));
+      fieldName: "reviews",
+      fieldType: amplify_core.ModelFieldType(
+          amplify_core.ModelFieldTypeEnum.model,
+          ofModelName: 'Review'));
   static final CREATEDBY = amplify_core.QueryField(fieldName: "createdBy");
   static final CREATEDAT = amplify_core.QueryField(fieldName: "createdAt");
   static final BADGE = amplify_core.QueryField(fieldName: "badge");
-  static final MEETINGPOINT = amplify_core.QueryField(fieldName: "meetingPoint");
+  static final MEETINGPOINT =
+      amplify_core.QueryField(fieldName: "meetingPoint");
   static final COUNTRY = amplify_core.QueryField(fieldName: "country");
-  static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
+  static var schema = amplify_core.Model.defineSchema(
+      define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Tour";
     modelSchemaDefinition.pluralName = "Tours";
-    
+
     modelSchemaDefinition.authRules = [
       amplify_core.AuthRule(
-        authStrategy: amplify_core.AuthStrategy.PUBLIC,
-        provider: amplify_core.AuthRuleProvider.IAM,
-        operations: const [
-          amplify_core.ModelOperation.READ
-        ]),
+          authStrategy: amplify_core.AuthStrategy.PUBLIC,
+          provider: amplify_core.AuthRuleProvider.IAM,
+          operations: const [amplify_core.ModelOperation.READ]),
       amplify_core.AuthRule(
-        authStrategy: amplify_core.AuthStrategy.PRIVATE,
-        provider: amplify_core.AuthRuleProvider.USERPOOLS,
-        operations: const [
-          amplify_core.ModelOperation.READ,
-          amplify_core.ModelOperation.CREATE,
-          amplify_core.ModelOperation.UPDATE,
-          amplify_core.ModelOperation.DELETE
-        ])
+          authStrategy: amplify_core.AuthStrategy.PRIVATE,
+          provider: amplify_core.AuthRuleProvider.USERPOOLS,
+          operations: const [
+            amplify_core.ModelOperation.READ,
+            amplify_core.ModelOperation.CREATE,
+            amplify_core.ModelOperation.UPDATE,
+            amplify_core.ModelOperation.DELETE
+          ])
     ];
-    
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.id());
-    
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: Tour.TITLE,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
+        key: Tour.TITLE,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: Tour.LOCATION,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
+        key: Tour.LOCATION,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: Tour.DESCRIPTION,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
+        key: Tour.DESCRIPTION,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: Tour.IMAGEURL,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
+        key: Tour.IMAGEURL,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: Tour.GALLERYIMAGES,
-      isRequired: false,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.collection, ofModelName: amplify_core.ModelFieldTypeEnum.string.name)
-    ));
-    
+        key: Tour.VIDEOURL,
+        isRequired: false,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: Tour.PASSENGERS,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
+        key: Tour.GALLERYIMAGES,
+        isRequired: false,
+        isArray: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.collection,
+            ofModelName: amplify_core.ModelFieldTypeEnum.string.name)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: Tour.SEASON,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
+        key: Tour.PASSENGERS,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: Tour.RATING,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.double)
-    ));
-    
+        key: Tour.SEASON,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: Tour.CATEGORY,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
+        key: Tour.RATING,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.double)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: Tour.TAGS,
-      isRequired: true,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.collection, ofModelName: amplify_core.ModelFieldTypeEnum.string.name)
-    ));
-    
+        key: Tour.CATEGORY,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+        key: Tour.TAGS,
+        isRequired: true,
+        isArray: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.collection,
+            ofModelName: amplify_core.ModelFieldTypeEnum.string.name)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'plans',
-      isRequired: true,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'Plan')
-    ));
-    
+        fieldName: 'plans',
+        isRequired: true,
+        isArray: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.embeddedCollection,
+            ofCustomTypeName: 'Plan')));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'days',
-      isRequired: true,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'Day')
-    ));
-    
+        fieldName: 'days',
+        isRequired: true,
+        isArray: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.embeddedCollection,
+            ofCustomTypeName: 'Day')));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'additionalInfo',
-      isRequired: false,
-      isArray: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embeddedCollection, ofCustomTypeName: 'Info')
-    ));
-    
+        fieldName: 'additionalInfo',
+        isRequired: false,
+        isArray: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.embeddedCollection,
+            ofCustomTypeName: 'Info')));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'guide',
-      isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embedded, ofCustomTypeName: 'TourGuide')
-    ));
-    
+        fieldName: 'guide',
+        isRequired: false,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.embedded,
+            ofCustomTypeName: 'TourGuide')));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.hasMany(
-      key: Tour.SCHEDULES,
-      isRequired: false,
-      ofModelName: 'Schedule',
-      associatedKey: Schedule.TOURID
-    ));
-    
+        key: Tour.SCHEDULES,
+        isRequired: false,
+        ofModelName: 'Schedule',
+        associatedKey: Schedule.TOURID));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.hasMany(
-      key: Tour.REVIEWS,
-      isRequired: false,
-      ofModelName: 'Review',
-      associatedKey: Review.TOURID
-    ));
-    
+        key: Tour.REVIEWS,
+        isRequired: false,
+        ofModelName: 'Review',
+        associatedKey: Review.TOURID));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: Tour.CREATEDBY,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
+        key: Tour.CREATEDBY,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: Tour.CREATEDAT,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.dateTime)
-    ));
-    
+        key: Tour.CREATEDAT,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.dateTime)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: Tour.BADGE,
-      isRequired: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
+        key: Tour.BADGE,
+        isRequired: true,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.embedded(
-      fieldName: 'meetingPoint',
-      isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.embedded, ofCustomTypeName: 'MeetingPoint')
-    ));
-    
+        fieldName: 'meetingPoint',
+        isRequired: false,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.embedded,
+            ofCustomTypeName: 'MeetingPoint')));
+
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
-      key: Tour.COUNTRY,
-      isRequired: false,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(
-      fieldName: 'updatedAt',
-      isRequired: false,
-      isReadOnly: true,
-      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.dateTime)
-    ));
+        key: Tour.COUNTRY,
+        isRequired: false,
+        ofType: amplify_core.ModelFieldType(
+            amplify_core.ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(
+        amplify_core.ModelFieldDefinition.nonQueryField(
+            fieldName: 'updatedAt',
+            isRequired: false,
+            isReadOnly: true,
+            ofType: amplify_core.ModelFieldType(
+                amplify_core.ModelFieldTypeEnum.dateTime)));
   });
 }
 
 class _TourModelType extends amplify_core.ModelType<Tour> {
   const _TourModelType();
-  
+
   @override
   Tour fromJson(Map<String, dynamic> jsonData) {
     return Tour.fromJson(jsonData);
   }
-  
+
   @override
   String modelName() {
     return 'Tour';
@@ -764,37 +947,32 @@ class TourModelIdentifier implements amplify_core.ModelIdentifier<Tour> {
   final String id;
 
   /** Create an instance of TourModelIdentifier using [id] the primary key. */
-  const TourModelIdentifier({
-    required this.id});
-  
+  const TourModelIdentifier({required this.id});
+
   @override
-  Map<String, dynamic> serializeAsMap() => (<String, dynamic>{
-    'id': id
-  });
-  
+  Map<String, dynamic> serializeAsMap() => (<String, dynamic>{'id': id});
+
   @override
   List<Map<String, dynamic>> serializeAsList() => serializeAsMap()
-    .entries
-    .map((entry) => (<String, dynamic>{ entry.key: entry.value }))
-    .toList();
-  
+      .entries
+      .map((entry) => (<String, dynamic>{entry.key: entry.value}))
+      .toList();
+
   @override
   String serializeAsString() => serializeAsMap().values.join('#');
-  
+
   @override
   String toString() => 'TourModelIdentifier(id: $id)';
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
-    
-    return other is TourModelIdentifier &&
-      id == other.id;
+
+    return other is TourModelIdentifier && id == other.id;
   }
-  
+
   @override
-  int get hashCode =>
-    id.hashCode;
+  int get hashCode => id.hashCode;
 }
